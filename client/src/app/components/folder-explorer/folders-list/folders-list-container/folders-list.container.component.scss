@@ -1,0 +1,27 @@
+:host {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 15px;
+    margin: 20px;    
+}
+
+div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 1rem;
+    color: #434343;
+    font-family: 'Roboto';
+    padding: 5px;
+    background-color: rgba(213, 213, 213, 0.8);
+    border-radius: 5px;
+
+    &:hover {
+        background-color: rgb(170, 170, 170);
+        color: #3a3a3a;
+        cursor: pointer;
+    }
+}
+

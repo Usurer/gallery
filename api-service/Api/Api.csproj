@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>83aa3f1e-5925-49cd-b301-e14dd4f1b491</UserSecretsId>
+    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
+    <GenerateDocumentationFile>False</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Attributes\**" />
+    <Compile Remove="Middleware\**" />
+    <Content Remove="Attributes\**" />
+    <Content Remove="Middleware\**" />
+    <EmbeddedResource Remove="Attributes\**" />
+    <EmbeddedResource Remove="Middleware\**" />
+    <None Remove="Attributes\**" />
+    <None Remove="Middleware\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EasyCaching.Disk" Version="1.9.3-alpha20231127013454" />
+    <PackageReference Include="EasyCaching.InMemory" Version="1.9.2" />
+    <PackageReference Include="EasyCaching.Serialization.MessagePack" Version="1.9.2" />
+    <PackageReference Include="EasyCaching.Serialization.Protobuf" Version="1.9.3-alpha20231127013454" />
+    <PackageReference Include="Imageflow.AllPlatforms" Version="0.10.2" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.10" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
+    <PackageReference Include="System.Linq.Async" Version="6.0.1" />
+  </ItemGroup>
+
+</Project>

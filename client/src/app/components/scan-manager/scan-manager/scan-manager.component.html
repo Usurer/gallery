@@ -1,0 +1,9 @@
+<p>scan-manager works!</p>
+
+<ng-container *ngIf="scans$ | async as scans">
+    <div *ngFor="let scan of scans">
+        <div>{{scan}}</div>
+    </div>
+</ng-container>
+
+<glr-add-scan (addScan)="addScan($event)"></glr-add-scan>

@@ -1,0 +1,5 @@
+<ng-container *ngIf="rowsInfo$ | async as rowsInfo">
+    <glr-image-list [rowsInfo]="rowsInfo"></glr-image-list>
+</ng-container>
+
+<router-outlet></router-outlet>

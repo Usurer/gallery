@@ -1,0 +1,3 @@
+<input #picker id="file-picker" type="text" (keyup)="pickerChange(picker.value)"/>
+
+<button [disabled]="submitDisabled" (click)="onSubmit(picker.value)">Add to scans</button>

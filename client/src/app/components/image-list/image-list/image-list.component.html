@@ -1,0 +1,9 @@
+<div class="rows-wrapper">
+  <div *ngFor="let rowInfo of rowsInfo; trackBy: trackRow" class="row">
+    <div *ngFor="let image of rowInfo.row; trackBy: trackImage" class="img-wrapper"  [style.width.px]="image.width" [style.height.px]="image.height">
+      <a [routerLink]="[imageRootPrefix, image.id]">
+        <img *ngIf="rowInfo.visible" @myInsertRemoveTrigger src="{{imagePreviewUrl + image.id + '&timestamp=' + image.updatedAtDate}}" alt="">
+      </a>
+    </div>
+  </div>
+</div>

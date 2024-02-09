@@ -1,0 +1,40 @@
+:host {
+    display: flex;
+    margin-top: 10px;
+}
+
+div {
+    font-size: 1rem;
+    
+
+    &::after {
+        font-family: 'Material Icons';
+        vertical-align: text-bottom;
+        color: #6d6c6c;
+        content: '\e5cc';
+    }
+
+    &:first-child::before {
+        font-family: 'Material Icons';
+        vertical-align: text-bottom;
+        color: #6d6c6c;
+        content: "\e88a";
+    }
+
+    &:last-child::after {
+        content: '';
+    }   
+}
+
+span {
+    padding: 3px;
+    // background-color: #f0f0f0;
+    cursor: pointer;
+
+    &:hover {
+        // background-color: #d8d7d7;
+        text-decoration: underline;
+    }
+
+    border-radius: 5px;
+}
