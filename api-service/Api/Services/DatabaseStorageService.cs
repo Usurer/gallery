@@ -102,8 +102,10 @@ namespace Api.Services
                     Name = item.Name,
                     CreationDate = DateTimeUtils.FromUnixTimestamp(item.CreationDate),
                     UpdatedAtDate = item.UpdatedAtDate,
-                    Width = item.Width.Value,
-                    Height = item.Height.Value,
+
+                    // TODO: I don't like the idea of nullable width and height
+                    Width = item.Width.GetValueOrDefault(),
+                    Height = item.Height.GetValueOrDefault(),
                     Extension = item.Extension,
                 });
             }
