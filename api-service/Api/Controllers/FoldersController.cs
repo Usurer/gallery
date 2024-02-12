@@ -1,5 +1,4 @@
-﻿using Api.Services;
-using Core;
+﻿using Core;
 using Core.DTO;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -17,16 +16,14 @@ namespace Api.Controllers
             _storageService = storageService;
         }
 
-        [HttpGet]
-        [Route("{parentId}")]
-        [Route("")]
-        public IEnumerable<FolderItemInfo> ListItems(long? parentId, int skip = 0, int take = 10)
+        [HttpGet("{folderId}")]
+        [HttpGet()]
+        public IEnumerable<FolderItemInfo> ListItems(long? folderId, int skip = 0, int take = 10)
         {
-            return _storageService.GetFolderItems(parentId, skip, take);
+            return _storageService.GetFolderItems(folderId, skip, take);
         }
 
-        [HttpGet]
-        [Route("{folderId}")]
+        [HttpGet("{folderId}")]
         public Results<Ok<IEnumerable<FolderItemInfo>>, ProblemHttpResult> GetAncestors(long folderId)
         {
             var result = _storageService.GetFolderAncestors(folderId);

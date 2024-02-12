@@ -109,11 +109,14 @@ namespace Api
             builder.Host.UseSerilog((builderContext, serviceProvider, configuration) =>
             {
                 configuration
+                    .MinimumLevel.Information()
+                    .MinimumLevel.Override(nameof(Microsoft.AspNetCore.Routing), LogEventLevel.Verbose)
                     .WriteTo.Console(
                         restrictedToMinimumLevel: LogEventLevel.Information,
-                        formatProvider: CultureInfo.InvariantCulture)
+                        formatProvider: CultureInfo.InvariantCulture
+                    )
                     .WriteTo.File(
-                        restrictedToMinimumLevel: LogEventLevel.Warning,
+                        restrictedToMinimumLevel: LogEventLevel.Verbose,
                         formatter: new JsonFormatter(),
                         path: "./logs/log.txt",
                         rollingInterval: RollingInterval.Day
