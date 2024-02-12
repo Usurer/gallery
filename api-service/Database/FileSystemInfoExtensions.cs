@@ -1,14 +1,9 @@
-﻿using Api.Database;
+﻿using Core.Utils;
 
-namespace Api.Utils
+namespace Database
 {
     public static class FileSystemInfoExtensions
     {
-        public static bool IsDirectory(this FileSystemInfo info)
-        {
-            return info.Attributes.HasFlag(FileAttributes.Directory);
-        }
-
         public static FileSystemItem ToFileSystemItem(
             this FileSystemInfo fileSystemInfo,
             long? parentid,

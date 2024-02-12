@@ -1,7 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Api.Database;
+namespace Database;
 
+
+// TODO: I don't want to expose the Context from Database namespace
+// All consumers should use methods provided by services
 public class GalleryContext : DbContext
 {
     public GalleryContext(DbContextOptions<GalleryContext> options) : base(options)

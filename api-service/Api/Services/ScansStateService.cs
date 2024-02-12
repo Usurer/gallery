@@ -1,5 +1,4 @@
-﻿using Api.Database;
-using Api.Utils;
+﻿using Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace Api.Services
@@ -15,8 +14,9 @@ namespace Api.Services
 
     public class ScansStateService : IScansStateService
     {
+        // TODO: Do not reference Context, use services instead
         private GalleryContext DbContext
-        {
+        { 
             get; set;
         }
 

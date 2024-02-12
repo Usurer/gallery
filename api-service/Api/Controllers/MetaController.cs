@@ -1,5 +1,5 @@
-﻿using Api.Services;
-using Api.Services.DTO;
+﻿using Core;
+using Core.DTO;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;

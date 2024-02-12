@@ -1,4 +1,4 @@
-using Api.Database;
+using Database;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers.Internal

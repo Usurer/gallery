@@ -1,6 +1,6 @@
-﻿namespace Api.Services.DTO
+﻿namespace Core.DTO
 {
-    public class FileItemInfo : ItemInfo
+    public record FileItemInfo : ItemInfo
     {
         public override bool IsFolder => false;
 

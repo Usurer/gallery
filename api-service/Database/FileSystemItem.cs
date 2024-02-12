@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Api.Database;
+namespace Database;
 
 // Just alternative to [Key] attribute
 [PrimaryKey(nameof(Id))]

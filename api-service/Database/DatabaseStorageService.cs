@@ -1,27 +1,22 @@
-﻿using Api.Database;
-using Api.Exceptions;
-using Api.Services.DTO;
-using Api.Utils;
+﻿using Core;
+using Core.DTO;
+using Core.Utils;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 
-namespace Api.Services
+namespace Database
 {
     public class DatabaseStorageService : IStorageService
     {
         private readonly GalleryContext DbContext;
 
-        private readonly FileSystemOptions FileSystemOptions;
-
         private readonly ILogger<DatabaseStorageService> Logger;
 
         public DatabaseStorageService(
             GalleryContext dbContext,
-            IOptions<FileSystemOptions> fileSystemOptions,
             ILogger<DatabaseStorageService> logger)
         {
             DbContext = dbContext;
-            FileSystemOptions = fileSystemOptions.Value;
             Logger = logger;
         }
 

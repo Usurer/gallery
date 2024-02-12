@@ -1,4 +1,4 @@
-﻿namespace Api.Services.DTO
+﻿namespace Core.DTO
 {
     public class CollectionMetadata
     {

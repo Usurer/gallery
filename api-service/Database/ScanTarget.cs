@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Api.Database
+namespace Database
 {
     public class ScanTarget
     {

@@ -1,19 +1,14 @@
-﻿using Api.Controllers.Internal;
-using Api.Database;
-using Api.Utils;
+﻿using Core;
+using Core.Utils;
+using Database;
 using Imageflow.Bindings;
 using Imageflow.Fluent;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Api.Services
+namespace FileSystem
 {
-    public interface IFileSystemService
-    {
-        public Task<ScanFolderResult> ScanFolderAsync(string? fullPath, IProgress<int>? progress);
-
-        public IAsyncEnumerable<ScanFolderResult> ScanFoldersFromRootAsync(string? root);
-    }
 
     /*
      * TODO: Refactor it
@@ -25,6 +20,7 @@ namespace Api.Services
     {
         private readonly FileSystemOptions FileSystemOptions;
 
+        // TODO: Do not reference GalleryContext, use services instead
         private readonly GalleryContext DbContext;
 
         private readonly ILogger<FileSystemService> Logger;
@@ -106,6 +102,7 @@ namespace Api.Services
                         // TODO: Even if existsInDb we can update missing ParentId if it's possible. Not sure about it
                         if (!existsInDb)
                         {
+                            // TODO: Extract all image processing into a namespace under a Core namespace
                             ImageInfo? imageInfo = null;
                             if (!isDirectory)
                             {
@@ -117,7 +114,7 @@ namespace Api.Services
                                 }
                                 catch (Exception ex)
                                 {
-                                    Logger.Log(LogLevel.Error, ex, $"Error while getting Image Info for {fileSystemInfo.FullName}");
+                                    Logger.LogError(ex, "Error while getting Image Info for {FileName}", fileSystemInfo.FullName);
                                 }
                             }
 

@@ -1,4 +1,4 @@
-﻿namespace Api.Services
+﻿namespace Core
 {
     public class ScanFolderResult
     {

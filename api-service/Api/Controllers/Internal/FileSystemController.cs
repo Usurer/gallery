@@ -1,5 +1,6 @@
 ﻿using Api.Services;
-using Api.Services.DTO;
+using Core;
+using Core.DTO;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;

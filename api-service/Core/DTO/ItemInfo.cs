@@ -1,6 +1,6 @@
-﻿namespace Api.Services.DTO
+﻿namespace Core.DTO
 {
-    public abstract class ItemInfo
+    public abstract record ItemInfo
     {
         public long Id
         {

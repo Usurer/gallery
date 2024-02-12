@@ -1,7 +1,8 @@
-using Api.Database;
+using FileSystem;
 using Api.Services;
+using Core;
+using Database;
 using EasyCaching.Disk;
-using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Json;
@@ -22,27 +23,17 @@ namespace Api
 
             AddLogging(builder);
 
-            // Add services to the container.
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen(options =>
-            {
-                options.EnableAnnotations();
-            });
-
-            builder.Services.AddDbContext<GalleryContext>(options =>
-            {
-                options.UseSqlite(builder.Configuration.GetConnectionString("sqlite"));
-                // TODO: Check if save works
-                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-            });
-
             IConfigurationSection fileSystemConfigSection = builder.Configuration.GetSection(FileSystemOptions.FileSystem);
 
+            builder.Services.AddControllers();
+
+            
+            AddSwagger(builder);
+            
+            builder.Services.AddSqliteDbStorage(builder.Configuration);
+
             builder.Services.Configure<FileSystemOptions>(fileSystemConfigSection);
-            builder.Services.AddScoped<IFileSystemService, FileSystemService>();
-            builder.Services.AddScoped<IStorageService, DatabaseStorageService>();
+            builder.Services.AddFileSystemServices();
             builder.Services.AddScoped<IScansStateService, ScansStateService>();
 
             builder.Services.AddCors(options =>
@@ -100,6 +91,16 @@ namespace Api
             app.MapControllers();
 
             app.Run();
+        }
+
+        private static void AddSwagger(WebApplicationBuilder builder)
+        {
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.EnableAnnotations();
+            });
         }
 
         private static void AddLogging(WebApplicationBuilder builder)

@@ -1,6 +1,6 @@
-﻿using Api.Services.DTO;
+﻿using Core.DTO;
 
-namespace Api.Services
+namespace Core
 {
     public interface IStorageService
     {
