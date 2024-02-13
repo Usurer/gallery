@@ -1,5 +1,6 @@
 ﻿namespace Core;
 
+// TODO: Can we use ItemInfo/FileItemInfo/FolderItemInfo instead?
 public record FileSystemItemDto
 {
     public long Id

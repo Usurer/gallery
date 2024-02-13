@@ -41,16 +41,18 @@ namespace Api.Services
             while (queue.TryDequeue(out var id))
             {
                 var scope = ServiceProvider.CreateScope();
-                var dbContext = scope.ServiceProvider.GetRequiredService<GalleryContext>();
+                var storageService = scope.ServiceProvider.GetRequiredService<IStorageService>();
                 var fileSystemService = scope.ServiceProvider.GetRequiredService<IFileSystemService>();
 
                 try
                 {
-                    var item = await dbContext.ScanTargets.Where(x => x.Id == id).AsTracking().SingleAsync();
-                    _ = await fileSystemService.ScanFoldersFromRootAsync(item.Path).ToArrayAsync();
+                    var item = await storageService.GetScanTarget(id);
+                    if (item != null)
+                    {
+                        _ = await fileSystemService.ScanFoldersFromRootAsync(item.Value.path).ToArrayAsync();
 
-                    dbContext.ScanTargets.Remove(item);
-                    await dbContext.SaveChangesAsync();
+                        await storageService.RemoveFolderFromScansAsync(item.Value.id);
+                    }
                 }
                 catch (Exception)
                 {

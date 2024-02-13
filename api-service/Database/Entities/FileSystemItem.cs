@@ -4,6 +4,7 @@ namespace Database;
 
 // Just alternative to [Key] attribute
 [PrimaryKey(nameof(Id))]
+// TODO: Internal
 public class FileSystemItem
 {
     public long Id

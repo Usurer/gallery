@@ -20,15 +20,14 @@ namespace FileSystem
     {
         private readonly FileSystemOptions FileSystemOptions;
 
-        // TODO: Do not reference GalleryContext, use services instead
-        private readonly GalleryContext DbContext;
+        private readonly IStorageService StorageService;
 
         private readonly ILogger<FileSystemService> Logger;
 
-        public FileSystemService(IOptions<FileSystemOptions> options, GalleryContext context, ILogger<FileSystemService> logger)
+        public FileSystemService(IOptions<FileSystemOptions> options, IStorageService storageService, ILogger<FileSystemService> logger)
         {
             FileSystemOptions = options.Value;
-            DbContext = context;
+            StorageService = storageService;
             Logger = logger;
         }
 
@@ -75,17 +74,14 @@ namespace FileSystem
                 // Use path from the filesystem instead of user-provided value
                 result.Path = rootDirectoryInfo.FullName;
 
-                var rootDbRecord = DbContext.FileSystemItems.Where(x => x.Path == fullPath).FirstOrDefault();
-                if (rootDbRecord == null)
-                {
-                    rootDbRecord = rootDirectoryInfo.ToFileSystemItem(null, null, null);
-                    DbContext.FileSystemItems.Add(rootDbRecord);
-                    await DbContext.SaveChangesAsync();
-                }
+                var rootDbRecord = await StorageService.GetOrCreateFileSystemItemAsync(rootDirectoryInfo);
 
                 var fileSystemInfos = rootDirectoryInfo.EnumerateFileSystemInfos();
 
                 var batch = fileSystemInfos.Skip(batchCounter * batchSize).Take(batchSize).ToArray();
+                
+                var newItems = new List<FileSystemItemDto>();
+                var updatedItems = new List<FileSystemItemDto>();
 
                 while (batch.Length > 0)
                 {
@@ -94,9 +90,7 @@ namespace FileSystem
                         var fileSystemInfo = batch[i];
                         var isDirectory = fileSystemInfo.IsDirectory();
 
-                        var dbItem = await DbContext
-                            .FileSystemItems
-                            .FirstOrDefaultAsync(x => x.Path == fileSystemInfo.FullName);
+                        var dbItem = await StorageService.GetByPathAsync(fileSystemInfo.FullName);
                         var existsInDb = dbItem != null;
 
                         // TODO: Even if existsInDb we can update missing ParentId if it's possible. Not sure about it
@@ -118,15 +112,15 @@ namespace FileSystem
                                 }
                             }
 
-                            FileSystemItem newItem = fileSystemInfo.ToFileSystemItem(
+                            var newItem = fileSystemInfo.ToFileSystemItemDto(
                                 rootDbRecord.Id,
                                 imageInfo != null ? (int)imageInfo.ImageWidth : null,
                                 imageInfo != null ? (int)imageInfo.ImageHeight : null
                             );
 
-                            DbContext.FileSystemItems.Add(newItem);
+                            newItems.Add(newItem);
 
-                            // Yeah, these are not saved yet, just added to the Context, but okay
+                            // Yeah, these are not saved yet, but okay
                             result.Saved++;
                         }
                         else
@@ -134,13 +128,16 @@ namespace FileSystem
                             if (dbItem.ParentId == null)
                             {
                                 dbItem.ParentId = rootDbRecord.Id;
-                                DbContext.FileSystemItems.Update(dbItem);
+
+                                updatedItems.Add(dbItem);
                             }
                         }
                         result.Total++;
                     }
 
-                    await DbContext.SaveChangesAsync();
+                    await StorageService.UpsertAsync(newItems, updatedItems);
+                    newItems.Clear();
+                    updatedItems.Clear();
 
                     if (progress != null)
                     {

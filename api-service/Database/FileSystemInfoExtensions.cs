@@ -2,7 +2,7 @@
 
 namespace Database
 {
-    public static class FileSystemInfoExtensions
+    internal static class FileSystemInfoExtensions
     {
         public static FileSystemItem ToFileSystemItem(
             this FileSystemInfo fileSystemInfo,

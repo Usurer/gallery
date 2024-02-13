@@ -34,7 +34,6 @@ namespace Api
 
             builder.Services.Configure<FileSystemOptions>(fileSystemConfigSection);
             builder.Services.AddFileSystemServices();
-            builder.Services.AddScoped<IScansStateService, ScansStateService>();
 
             builder.Services.AddCors(options =>
             {
@@ -65,11 +64,7 @@ namespace Api
 
             WebApplication app = builder.Build();
 
-            using (var scope = app.Services.CreateScope())
-            {
-                var dbContext = scope.ServiceProvider.GetRequiredService<GalleryContext>();
-                dbContext.Database.EnsureCreated();
-            }
+            app.Services.UseSqliteDb();
 
             app.UseCors();
 

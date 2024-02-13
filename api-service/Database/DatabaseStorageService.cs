@@ -1,12 +1,13 @@
 ﻿using Core;
 using Core.DTO;
 using Core.Utils;
+using Database.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Database
 {
-    public class DatabaseStorageService : IStorageService
+    internal class DatabaseStorageService : IStorageService
     {
         private readonly GalleryContext DbContext;
 
@@ -53,6 +54,46 @@ namespace Database
                 Height = item.Height.Value,
                 Extension = item.Extension,
             };
+        }
+
+        public async Task<IEnumerable<ItemInfo>> GetItemsAsync(int skip, int take)
+        {
+            IQueryable<FileSystemItem> items;
+
+            items = DbContext.FileSystemItems;
+
+            items = items
+                .OrderBy(x => x.CreationDate)
+                .Skip(skip)
+                .Take(take);
+
+            var result = new List<ItemInfo>();
+
+            await foreach (var item in items.AsAsyncEnumerable())
+            {
+                ItemInfo newItem = item switch
+                {
+                    { IsFolder: true } => new FolderItemInfo
+                    {
+                        Id = item.Id,
+                        Name = item.Name,
+                        CreationDate = DateTimeUtils.FromUnixTimestamp(item.CreationDate),
+                        UpdatedAtDate = item.UpdatedAtDate,
+                    },
+                    { IsFolder: false } => new FileItemInfo
+                    {
+                        Id = item.Id,
+                        Name = item.Name,
+                        CreationDate = DateTimeUtils.FromUnixTimestamp(item.CreationDate),
+                        UpdatedAtDate = item.UpdatedAtDate,
+                        Extension = item.Extension ?? string.Empty,
+                        Height = item.Height.GetValueOrDefault(),
+                        Width = item.Width.GetValueOrDefault(),
+                    },
+                };
+            }
+
+            return result;
         }
 
         public IEnumerable<FileItemInfo> GetFileItems(long? folderId, int skip, int take, string[]? extensions)
@@ -262,6 +303,82 @@ namespace Database
             };
 
             return info;
+        }
+
+        public async Task RemoveFolderFromScansAsync(long id)
+        {
+            var item = await DbContext.ScanTargets.Where(x => x.Id == id).SingleAsync();
+            DbContext.ScanTargets.Remove(item);
+            await DbContext.SaveChangesAsync();
+        }
+
+        public async Task<(long id, string path)?> GetScanTarget()
+        {
+            var item = await DbContext.ScanTargets.OrderBy(x => x.Id).FirstOrDefaultAsync();
+            if (item != null)
+            {
+                return new(item.Id, item.Path);
+            }
+            return null;
+        }
+
+        public async Task<(long id, string path)?> GetScanTarget(long id)
+        {
+            var item = await DbContext.ScanTargets.SingleOrDefaultAsync(x => x.Id == id);
+            if (item != null)
+            {
+                return new(item.Id, item.Path);
+            }
+            return null;
+        }
+
+        public async Task<long> AddFolderToScansAsync(string path)
+        {
+            var existingItem = DbContext.FileSystemItems.Where(x => x.Path == path).SingleOrDefault();
+            if (existingItem != null)
+            {
+                throw new ApplicationException($"{path} is already in DB");
+            }
+
+            var entity = new ScanTarget
+            {
+                Path = path
+            };
+            DbContext.ScanTargets.Add(entity);
+
+            await DbContext.SaveChangesAsync();
+            return entity.Id;
+        }
+
+        // TODO: Find if there's a way to have a method that would accept the selector property,
+        // i.e. instead of having 2 different GetByPath and GetById we would have
+        // GetBy<T>(typeof(T) value) where T keyof FileSystemItem
+        // There might be libraries for that
+        public async Task<FileSystemItemDto?> GetByPathAsync(string path)
+        {
+            var item = await DbContext.FileSystemItems.FirstOrDefaultAsync(x => x.Path == path);
+            return item?.ToDto();
+        }
+
+        public async Task<FileSystemItemDto> GetOrCreateFileSystemItemAsync(DirectoryInfo directoryInfo)
+        {
+            var rootDbRecord = DbContext.FileSystemItems.Where(x => x.Path == directoryInfo.FullName).FirstOrDefault();
+            if (rootDbRecord == null)
+            {
+                rootDbRecord = directoryInfo.ToFileSystemItem(null, null, null);
+                DbContext.FileSystemItems.Add(rootDbRecord);
+                await DbContext.SaveChangesAsync();
+            }
+            return rootDbRecord.ToDto();
+        }
+
+        public async Task UpsertAsync(IEnumerable<FileSystemItemDto> add, IEnumerable<FileSystemItemDto> update)
+        {
+            var addTask = DbContext.FileSystemItems.AddRangeAsync(add.Select(x => x.ToEntity()));
+            DbContext.FileSystemItems.UpdateRange(update.Select(x => x.ToEntity()));
+            await addTask;
+
+            await DbContext.SaveChangesAsync();
         }
     }
 }

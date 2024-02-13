@@ -1,4 +1,6 @@
-using Database;
+using Core;
+using Core.DTO;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers.Internal
@@ -10,33 +12,33 @@ namespace Api.Controllers.Internal
     [Route("internals/[controller]/[action]")]
     public class DatabaseController : ControllerBase
     {
-        private readonly ILogger<DatabaseController> _logger;
-        private readonly GalleryContext _context;
+        private readonly ILogger<DatabaseController> Logger;
+        private readonly IStorageService StorageService;
 
-        public DatabaseController(ILogger<DatabaseController> logger, GalleryContext context)
+        public DatabaseController(ILogger<DatabaseController> logger, IStorageService storageService)
         {
-            _logger = logger;
-            _context = context;
+            Logger = logger;
+            StorageService = storageService;
         }
 
         [HttpGet]
-        public IEnumerable<FileSystemItem> Get()
+        public async Task<IEnumerable<ItemInfo>> Get(int take = 100, int skip = 0)
         {
-            var item = _context.FileSystemItems;
+            var item = await StorageService.GetItemsAsync(skip, take);
             return item;
         }
 
         [HttpPut]
-        public ActionResult Put()
+        public async Task<IResult> Put()
         {
-            var item = new FileSystemItem
+            var item = new FileSystemItemDto
             {
                 Path = "Some path",
             };
-            _context.FileSystemItems.Add(item);
-            _context.SaveChanges();
+            
+            await StorageService.UpsertAsync([item], Enumerable.Empty<FileSystemItemDto>());
 
-            return Ok();
+            return Results.Ok();
         }
     }
 }

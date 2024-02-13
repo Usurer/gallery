@@ -1,5 +1,4 @@
-﻿using Api.Services;
-using Core;
+﻿using Core;
 
 namespace Api.BackgroundServices
 {
@@ -35,11 +34,15 @@ namespace Api.BackgroundServices
             IsRunning = true;
             using var scope = Services.CreateScope();
             var storageService = scope.ServiceProvider.GetRequiredService<IStorageService>();
-            var scanService = scope.ServiceProvider.GetRequiredService<IScansStateService>();
             var fileSystemService = scope.ServiceProvider.GetRequiredService<IFileSystemService>();
 
-            var item = await scanService.GetNext();
-            await fileSystemService.ScanFoldersFromRootAsync(item.Path).ToArrayAsync();
+            var item = await storageService.GetScanTarget();
+            if (item.HasValue)
+            {
+                // TODO: We do not return the result of this execution, so pushing it to memory with the ToArrayAsync() isn't good.
+                // Probably I can rewrite the ScanFoldersFromRootAsync itself, to create a version that puts data to DB, but doesn't return it
+                await fileSystemService.ScanFoldersFromRootAsync(item.Value.path).ToArrayAsync();
+            }
 
             IsRunning = false;
         }
