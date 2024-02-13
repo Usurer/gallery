@@ -1,6 +1,6 @@
 ﻿using Core.Utils;
 
-namespace Database
+namespace Database.Entities.Utils
 {
     internal static class FileSystemInfoExtensions
     {

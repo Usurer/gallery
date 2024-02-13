@@ -1,4 +1,6 @@
-﻿namespace Core.Utils
+﻿using Core.DTO;
+
+namespace Core.Utils
 {
     public static class FileSystemInfoExtensions
     {

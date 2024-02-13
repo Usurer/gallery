@@ -1,6 +1,6 @@
-﻿using Core;
+﻿using Core.DTO;
 
-namespace Database
+namespace Database.Entities.Utils
 {
     internal static class FileSystemItemExtensions
     {

@@ -1,5 +1,5 @@
 ﻿using Api.Services;
-using Core;
+using Core.Abstractions;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 

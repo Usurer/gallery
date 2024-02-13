@@ -1,4 +1,4 @@
-﻿using Core;
+﻿using Core.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FileSystem

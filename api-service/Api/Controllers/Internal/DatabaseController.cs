@@ -1,5 +1,6 @@
-using Core;
+using Core.Abstractions;
 using Core.DTO;
+using Core.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,7 +23,7 @@ namespace Api.Controllers.Internal
         }
 
         [HttpGet]
-        public async Task<IEnumerable<ItemInfo>> Get(int take = 100, int skip = 0)
+        public async Task<IEnumerable<ItemInfoModel>> Get(int take = 100, int skip = 0)
         {
             var item = await StorageService.GetItemsAsync(skip, take);
             return item;

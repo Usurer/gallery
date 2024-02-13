@@ -1,4 +1,4 @@
-﻿namespace Core;
+﻿namespace Core.DTO;
 
 // TODO: Can we use ItemInfo/FileItemInfo/FolderItemInfo instead?
 public record FileSystemItemDto

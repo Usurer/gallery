@@ -1,6 +1,4 @@
-﻿using Core;
-
-namespace Core
+﻿namespace Core.Abstractions
 {
     public interface IFileSystemService
     {

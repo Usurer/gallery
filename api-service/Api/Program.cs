@@ -1,12 +1,12 @@
 using FileSystem;
 using Api.Services;
 using Core;
-using Database;
 using EasyCaching.Disk;
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Json;
 using System.Globalization;
+using Database.Extensions;
 
 namespace Api
 {

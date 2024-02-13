@@ -1,4 +1,4 @@
-﻿using Core;
+﻿using Core.Abstractions;
 using Database;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Concurrent;

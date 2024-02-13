@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Database
+namespace Database.Extensions
 {
-    public static class IServiceProviderExtensions
+    public static class ServiceProviderExtensions
     {
         public static void UseSqliteDb(this IServiceProvider services)
         {

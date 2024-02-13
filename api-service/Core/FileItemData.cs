@@ -1,10 +1,12 @@
-﻿namespace Core.DTO
+﻿using Core.Models;
+
+namespace Core
 {
     public class FileItemData : IDisposable
     {
         private bool disposedValue;
 
-        public FileItemInfo Info
+        public FileItemInfoModel Info
         {
             get;
             set;

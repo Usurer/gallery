@@ -1,6 +1,6 @@
-﻿namespace Core.DTO
+﻿namespace Core.Models
 {
-    public record FileItemInfo : ItemInfo
+    public record FileItemInfoModel : ItemInfoModel
     {
         public override bool IsFolder => false;
 

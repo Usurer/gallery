@@ -1,7 +1,10 @@
 ﻿using Core;
+using Core.Abstractions;
 using Core.DTO;
+using Core.Models;
 using Core.Utils;
 using Database.Entities;
+using Database.Entities.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -21,7 +24,7 @@ namespace Database
             Logger = logger;
         }
 
-        public ItemInfo? GetItem(long id)
+        public ItemInfoModel? GetItem(long id)
         {
             var item = DbContext
                 .FileSystemItems
@@ -35,7 +38,7 @@ namespace Database
 
             if (item.IsFolder)
             {
-                return new FolderItemInfo
+                return new FolderItemInfoModel
                 {
                     Id = item.Id,
                     Name = item.Name,
@@ -44,7 +47,7 @@ namespace Database
                 };
             }
 
-            return new FileItemInfo
+            return new FileItemInfoModel
             {
                 Id = item.Id,
                 Name = item.Name,
@@ -56,7 +59,7 @@ namespace Database
             };
         }
 
-        public async Task<IEnumerable<ItemInfo>> GetItemsAsync(int skip, int take)
+        public async Task<IEnumerable<ItemInfoModel>> GetItemsAsync(int skip, int take)
         {
             IQueryable<FileSystemItem> items;
 
@@ -67,20 +70,20 @@ namespace Database
                 .Skip(skip)
                 .Take(take);
 
-            var result = new List<ItemInfo>();
+            var result = new List<ItemInfoModel>();
 
             await foreach (var item in items.AsAsyncEnumerable())
             {
-                ItemInfo newItem = item switch
+                ItemInfoModel newItem = item switch
                 {
-                    { IsFolder: true } => new FolderItemInfo
+                    { IsFolder: true } => new FolderItemInfoModel
                     {
                         Id = item.Id,
                         Name = item.Name,
                         CreationDate = DateTimeUtils.FromUnixTimestamp(item.CreationDate),
                         UpdatedAtDate = item.UpdatedAtDate,
                     },
-                    { IsFolder: false } => new FileItemInfo
+                    { IsFolder: false } => new FileItemInfoModel
                     {
                         Id = item.Id,
                         Name = item.Name,
@@ -96,7 +99,7 @@ namespace Database
             return result;
         }
 
-        public IEnumerable<FileItemInfo> GetFileItems(long? folderId, int skip, int take, string[]? extensions)
+        public IEnumerable<FileItemInfoModel> GetFileItems(long? folderId, int skip, int take, string[]? extensions)
         {
             IQueryable<FileSystemItem> items;
 
@@ -116,7 +119,7 @@ namespace Database
                 .Skip(skip)
                 .Take(take);
 
-            var result = new List<FileItemInfo>();
+            var result = new List<FileItemInfoModel>();
             foreach (var item in items)
             {
                 if (extensions?.Length > 0)
@@ -132,7 +135,7 @@ namespace Database
                     continue;
                 }
 
-                result.Add(new FileItemInfo
+                result.Add(new FileItemInfoModel
                 {
                     Id = item.Id,
                     Name = item.Name,
@@ -149,7 +152,7 @@ namespace Database
             return result;
         }
 
-        public IEnumerable<FolderItemInfo> GetFolderItems(long? folderId, int skip, int take)
+        public IEnumerable<FolderItemInfoModel> GetFolderItems(long? folderId, int skip, int take)
         {
             IQueryable<FileSystemItem> items;
 
@@ -171,10 +174,10 @@ namespace Database
                 .Skip(skip)
                 .Take(take);
 
-            var result = new List<FolderItemInfo>();
+            var result = new List<FolderItemInfoModel>();
             foreach (var item in items)
             {
-                result.Add(new FolderItemInfo
+                result.Add(new FolderItemInfoModel
                 {
                     Id = item.Id,
                     Name = item.Name,
@@ -186,7 +189,7 @@ namespace Database
             return result;
         }
 
-        public IEnumerable<FolderItemInfo>? GetFolderAncestors(long folderId)
+        public IEnumerable<FolderItemInfoModel>? GetFolderAncestors(long folderId)
         {
             var ansectors = new List<FileSystemItem>();
             var currentFolder = DbContext
@@ -215,7 +218,7 @@ namespace Database
 
             return ansectors.Select(x =>
             {
-                return new FolderItemInfo
+                return new FolderItemInfoModel
                 {
                     Id = x.Id,
                     Name = x.Name,
@@ -225,9 +228,9 @@ namespace Database
             });
         }
 
-        public CollectionMetadata GetCollectionMetadata(long? rootId)
+        public CollectionMetadataModel GetCollectionMetadata(long? rootId)
         {
-            var result = new CollectionMetadata()
+            var result = new CollectionMetadataModel()
             {
                 RootId = rootId,
                 ItemsPerMonth = new Dictionary<DateTime, int>()
@@ -289,7 +292,7 @@ namespace Database
             var stream = new FileStream(fileItem.Path, FileMode.Open);
             var info = new FileItemData
             {
-                Info = new FileItemInfo
+                Info = new FileItemInfoModel
                 {
                     Id = fileItem.Id,
                     Name = fileItem.Name,

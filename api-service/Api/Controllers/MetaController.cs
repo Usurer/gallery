@@ -1,5 +1,5 @@
-﻿using Core;
-using Core.DTO;
+﻿using Core.Abstractions;
+using Core.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -25,7 +25,7 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public Results<ProblemHttpResult, Ok<ItemInfo>> GetItemMetadata([BindRequired] long id)
+        public Results<ProblemHttpResult, Ok<ItemInfoModel>> GetItemMetadata([BindRequired] long id)
         {
             var result = _storageService.GetItem(id);
             if (result == null)

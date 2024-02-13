@@ -1,6 +1,6 @@
-﻿namespace Core.DTO
+﻿namespace Core.Models
 {
-    public abstract record ItemInfo
+    public abstract record ItemInfoModel
     {
         public long Id
         {

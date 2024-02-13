@@ -1,10 +1,9 @@
-﻿using Core;
+﻿using Core.DTO;
 
-namespace Database
+namespace Database.Entities.Utils
 {
     internal static class FileSystemItemDtoExtensions
     {
-
         public static FileSystemItem ToEntity(this FileSystemItemDto item)
         {
             return new FileSystemItem

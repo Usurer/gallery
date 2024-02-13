@@ -1,9 +1,9 @@
-﻿using Core;
+﻿using Core.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Database
+namespace Database.Extensions
 {
     public static class ServiceCollectionExtensions
     {
