@@ -9,10 +9,10 @@ namespace Api.Controllers
     [ApiController]
     public class ScansController : ControllerBase
     {
-        private readonly IStorageService storageService;
+        private readonly IScanStorageService storageService;
         private readonly IScansProcessingService ScansProcessingService;
 
-        public ScansController(IStorageService storageService, IScansProcessingService scansProcessingService)
+        public ScansController(IScanStorageService storageService, IScansProcessingService scansProcessingService)
         {
             this.storageService = storageService;
             ScansProcessingService = scansProcessingService;

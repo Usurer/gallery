@@ -41,7 +41,7 @@ namespace Api.Services
             while (queue.TryDequeue(out var id))
             {
                 var scope = ServiceProvider.CreateScope();
-                var storageService = scope.ServiceProvider.GetRequiredService<IStorageService>();
+                var storageService = scope.ServiceProvider.GetRequiredService<IScanStorageService>();
                 var fileSystemService = scope.ServiceProvider.GetRequiredService<IFileSystemService>();
 
                 try

@@ -1,7 +1,6 @@
 ﻿using Core;
 using Core.Abstractions;
 using Core.DTO;
-using Database.Entities;
 using Database.Entities.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -222,51 +221,6 @@ namespace Database
             };
 
             return info;
-        }
-
-        public async Task RemoveFolderFromScansAsync(long id)
-        {
-            var item = await DbContext.ScanTargets.Where(x => x.Id == id).SingleAsync();
-            DbContext.ScanTargets.Remove(item);
-            await DbContext.SaveChangesAsync();
-        }
-
-        public async Task<(long id, string path)?> GetScanTarget()
-        {
-            var item = await DbContext.ScanTargets.OrderBy(x => x.Id).FirstOrDefaultAsync();
-            if (item != null)
-            {
-                return new(item.Id, item.Path);
-            }
-            return null;
-        }
-
-        public async Task<(long id, string path)?> GetScanTarget(long id)
-        {
-            var item = await DbContext.ScanTargets.SingleOrDefaultAsync(x => x.Id == id);
-            if (item != null)
-            {
-                return new(item.Id, item.Path);
-            }
-            return null;
-        }
-
-        public async Task<long> AddFolderToScansAsync(string path)
-        {
-            var existingItem = DbContext.FileSystemItems.Where(x => x.Path == path).SingleOrDefault();
-            if (existingItem != null)
-            {
-                throw new ApplicationException($"{path} is already in DB");
-            }
-
-            var entity = new ScanTarget
-            {
-                Path = path
-            };
-            DbContext.ScanTargets.Add(entity);
-
-            await DbContext.SaveChangesAsync();
-            return entity.Id;
         }
 
         // TODO: Find if there's a way to have a method that would accept the selector property,

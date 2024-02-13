@@ -18,16 +18,6 @@ namespace Core.Abstractions
 
         public FileItemData? GetImage(long id);
 
-        // TODO: Next should be extracted into separate Scans service
-        // Plus there should be a method to add a new Scan
-        public Task RemoveFolderFromScansAsync(long id);
-
-        public Task<(long id, string path)?> GetScanTarget();
-
-        public Task<(long id, string path)?> GetScanTarget(long id);
-
-        public Task<long> AddFolderToScansAsync(string path);
-
 
         // TODO: Extract next into a separate service
 

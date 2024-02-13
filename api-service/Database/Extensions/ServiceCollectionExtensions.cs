@@ -18,6 +18,7 @@ namespace Database.Extensions
             });
 
             services.AddScoped<IStorageService, DatabaseStorageService>();
+            services.AddScoped<IScanStorageService, ScanStorageService>();
         }
     }
 }

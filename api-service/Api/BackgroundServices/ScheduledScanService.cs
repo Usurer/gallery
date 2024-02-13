@@ -33,7 +33,7 @@ namespace Api.BackgroundServices
 
             IsRunning = true;
             using var scope = Services.CreateScope();
-            var storageService = scope.ServiceProvider.GetRequiredService<IStorageService>();
+            var storageService = scope.ServiceProvider.GetRequiredService<IScanStorageService>();
             var fileSystemService = scope.ServiceProvider.GetRequiredService<IFileSystemService>();
 
             var item = await storageService.GetScanTarget();
