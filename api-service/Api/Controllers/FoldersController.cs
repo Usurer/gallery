@@ -1,5 +1,5 @@
-﻿using Core.Abstractions;
-using Core.Models;
+﻿using Api.Models;
+using Core.Abstractions;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,7 +20,7 @@ namespace Api.Controllers
         [HttpGet()]
         public IEnumerable<FolderItemInfoModel> ListItems(long? folderId, int skip = 0, int take = 10)
         {
-            return _storageService.GetFolderItems(folderId, skip, take);
+            return _storageService.GetFolderItems(folderId, skip, take).Select(x => x.ToFolderModel());
         }
 
         [HttpGet("{folderId}")]
@@ -35,7 +35,7 @@ namespace Api.Controllers
                 );
             }
 
-            return TypedResults.Ok(result);
+            return TypedResults.Ok(result.Select(x => x.ToFolderModel()));
         }
     }
 }

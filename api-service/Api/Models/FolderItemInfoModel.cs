@@ -1,4 +1,4 @@
-﻿namespace Core.Models
+﻿namespace Api.Models
 {
     public record FolderItemInfoModel : ItemInfoModel
     {

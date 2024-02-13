@@ -1,7 +1,7 @@
-﻿using Api.Services;
+﻿using Api.Models;
+using Api.Services;
 using Api.Utils;
 using Core.Abstractions;
-using Core.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -78,7 +78,7 @@ namespace Api.Controllers
         [Route("")]
         public IEnumerable<FileItemInfoModel> ListItems(long? folderId, int skip = 0, int take = 10, [FromQuery] string[]? extensions = null)
         {
-            return _storageService.GetFileItems(folderId, skip, take, extensions);
+            return _storageService.GetFileItems(folderId, skip, take, extensions).Select(x => x.ToFileModel());
         }
     }
 }

@@ -1,7 +1,6 @@
-﻿using Api.Services;
+﻿using Api.Models;
 using Core;
 using Core.Abstractions;
-using Core.Models;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -49,7 +48,7 @@ namespace Api.Controllers.Internal
         [HttpGet()]
         public IEnumerable<FileItemInfoModel> GetFileSystemItems(long? rootId)
         {
-            return StorageService.GetFileItems(rootId, 0, 500, null);
+            return StorageService.GetFileItems(rootId, 0, 500, null).Select(x => x.ToFileModel());
         }
     }
 }

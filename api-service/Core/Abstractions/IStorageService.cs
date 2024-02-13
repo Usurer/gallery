@@ -1,21 +1,20 @@
 ﻿using Core.DTO;
-using Core.Models;
 
 namespace Core.Abstractions
 {
     public interface IStorageService
     {
-        public ItemInfoModel? GetItem(long id);
+        public FileSystemItemDto? GetItem(long id);
 
-        public Task<IEnumerable<ItemInfoModel>> GetItemsAsync(int skip, int take);
+        public IEnumerable<FileSystemItemDto> GetItems(int skip, int take);
 
-        public IEnumerable<FileItemInfoModel> GetFileItems(long? folderId, int skip, int take, string[]? extensions);
+        public IEnumerable<FileSystemItemDto> GetFileItems(long? folderId, int skip, int take, string[]? extensions);
 
-        public IEnumerable<FolderItemInfoModel> GetFolderItems(long? folderId, int skip, int take);
+        public IEnumerable<FileSystemItemDto> GetFolderItems(long? folderId, int skip, int take);
 
-        public IEnumerable<FolderItemInfoModel>? GetFolderAncestors(long folderId);
+        public IEnumerable<FileSystemItemDto>? GetFolderAncestors(long folderId);
 
-        public CollectionMetadataModel GetCollectionMetadata(long? rootId);
+        public CollectionMetadataDto GetCollectionMetadata(long? rootId);
 
         public FileItemData? GetImage(long id);
 

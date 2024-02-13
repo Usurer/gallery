@@ -1,8 +1,6 @@
 ﻿using Core;
 using Core.Abstractions;
 using Core.DTO;
-using Core.Models;
-using Core.Utils;
 using Database.Entities;
 using Database.Entities.Utils;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +22,7 @@ namespace Database
             Logger = logger;
         }
 
-        public ItemInfoModel? GetItem(long id)
+        public FileSystemItemDto? GetItem(long id)
         {
             var item = DbContext
                 .FileSystemItems
@@ -36,30 +34,11 @@ namespace Database
                 return null;
             }
 
-            if (item.IsFolder)
-            {
-                return new FolderItemInfoModel
-                {
-                    Id = item.Id,
-                    Name = item.Name,
-                    CreationDate = DateTimeUtils.FromUnixTimestamp(item.CreationDate),
-                    UpdatedAtDate = item.UpdatedAtDate,
-                };
-            }
-
-            return new FileItemInfoModel
-            {
-                Id = item.Id,
-                Name = item.Name,
-                CreationDate = DateTimeUtils.FromUnixTimestamp(item.CreationDate),
-                UpdatedAtDate = item.UpdatedAtDate,
-                Width = item.Width.Value,
-                Height = item.Height.Value,
-                Extension = item.Extension,
-            };
+            return item.ToDto();
         }
 
-        public async Task<IEnumerable<ItemInfoModel>> GetItemsAsync(int skip, int take)
+        
+        public IEnumerable<FileSystemItemDto> GetItems(int skip, int take)
         {
             IQueryable<FileSystemItem> items;
 
@@ -70,36 +49,12 @@ namespace Database
                 .Skip(skip)
                 .Take(take);
 
-            var result = new List<ItemInfoModel>();
+            var result = new List<FileSystemItemDto>();
 
-            await foreach (var item in items.AsAsyncEnumerable())
-            {
-                ItemInfoModel newItem = item switch
-                {
-                    { IsFolder: true } => new FolderItemInfoModel
-                    {
-                        Id = item.Id,
-                        Name = item.Name,
-                        CreationDate = DateTimeUtils.FromUnixTimestamp(item.CreationDate),
-                        UpdatedAtDate = item.UpdatedAtDate,
-                    },
-                    { IsFolder: false } => new FileItemInfoModel
-                    {
-                        Id = item.Id,
-                        Name = item.Name,
-                        CreationDate = DateTimeUtils.FromUnixTimestamp(item.CreationDate),
-                        UpdatedAtDate = item.UpdatedAtDate,
-                        Extension = item.Extension ?? string.Empty,
-                        Height = item.Height.GetValueOrDefault(),
-                        Width = item.Width.GetValueOrDefault(),
-                    },
-                };
-            }
-
-            return result;
+            return items.Select(x => x.ToDto()).ToArray();
         }
 
-        public IEnumerable<FileItemInfoModel> GetFileItems(long? folderId, int skip, int take, string[]? extensions)
+        public IEnumerable<FileSystemItemDto> GetFileItems(long? folderId, int skip, int take, string[]? extensions)
         {
             IQueryable<FileSystemItem> items;
 
@@ -119,7 +74,9 @@ namespace Database
                 .Skip(skip)
                 .Take(take);
 
-            var result = new List<FileItemInfoModel>();
+            var result = new List<FileSystemItemDto>();
+            
+            //TODO: can it be rewritten as lambda?
             foreach (var item in items)
             {
                 if (extensions?.Length > 0)
@@ -135,24 +92,13 @@ namespace Database
                     continue;
                 }
 
-                result.Add(new FileItemInfoModel
-                {
-                    Id = item.Id,
-                    Name = item.Name,
-                    CreationDate = DateTimeUtils.FromUnixTimestamp(item.CreationDate),
-                    UpdatedAtDate = item.UpdatedAtDate,
-
-                    // TODO: I don't like the idea of nullable width and height
-                    Width = item.Width.GetValueOrDefault(),
-                    Height = item.Height.GetValueOrDefault(),
-                    Extension = item.Extension,
-                });
+                result.Add(item.ToDto());
             }
 
             return result;
         }
 
-        public IEnumerable<FolderItemInfoModel> GetFolderItems(long? folderId, int skip, int take)
+        public IEnumerable<FileSystemItemDto> GetFolderItems(long? folderId, int skip, int take)
         {
             IQueryable<FileSystemItem> items;
 
@@ -174,22 +120,10 @@ namespace Database
                 .Skip(skip)
                 .Take(take);
 
-            var result = new List<FolderItemInfoModel>();
-            foreach (var item in items)
-            {
-                result.Add(new FolderItemInfoModel
-                {
-                    Id = item.Id,
-                    Name = item.Name,
-                    CreationDate = DateTimeUtils.FromUnixTimestamp(item.CreationDate),
-                    UpdatedAtDate = item.UpdatedAtDate,
-                });
-            }
-
-            return result;
+            return items.Select(x => x.ToDto()).ToArray();
         }
 
-        public IEnumerable<FolderItemInfoModel>? GetFolderAncestors(long folderId)
+        public IEnumerable<FileSystemItemDto>? GetFolderAncestors(long folderId)
         {
             var ansectors = new List<FileSystemItem>();
             var currentFolder = DbContext
@@ -216,21 +150,12 @@ namespace Database
                     .SingleOrDefault(x => x.Id == parent.ParentId && x.IsFolder);
             }
 
-            return ansectors.Select(x =>
-            {
-                return new FolderItemInfoModel
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    CreationDate = DateTimeUtils.FromUnixTimestamp(x.CreationDate),
-                    UpdatedAtDate = x.UpdatedAtDate,
-                };
-            });
+            return ansectors.Select(x => x.ToDto()).ToArray();
         }
 
-        public CollectionMetadataModel GetCollectionMetadata(long? rootId)
+        public CollectionMetadataDto GetCollectionMetadata(long? rootId)
         {
-            var result = new CollectionMetadataModel()
+            var result = new CollectionMetadataDto()
             {
                 RootId = rootId,
                 ItemsPerMonth = new Dictionary<DateTime, int>()
@@ -292,16 +217,7 @@ namespace Database
             var stream = new FileStream(fileItem.Path, FileMode.Open);
             var info = new FileItemData
             {
-                Info = new FileItemInfoModel
-                {
-                    Id = fileItem.Id,
-                    Name = fileItem.Name,
-                    CreationDate = new DateTime(fileItem.CreationDate),
-                    UpdatedAtDate = fileItem.UpdatedAtDate,
-                    Extension = fileItem.Extension,
-                    Width = fileItem.Width.Value,
-                    Height = fileItem.Height.Value,
-                },
+                Info = fileItem.ToDto(),
                 Data = stream
             };
 

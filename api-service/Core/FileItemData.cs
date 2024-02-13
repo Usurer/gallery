@@ -1,4 +1,4 @@
-﻿using Core.Models;
+﻿using Core.DTO;
 
 namespace Core
 {
@@ -6,7 +6,7 @@ namespace Core
     {
         private bool disposedValue;
 
-        public FileItemInfoModel Info
+        public FileSystemItemDto Info
         {
             get;
             set;

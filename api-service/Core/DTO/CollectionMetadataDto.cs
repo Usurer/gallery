@@ -1,6 +1,6 @@
-﻿namespace Core.Models
+﻿namespace Core.DTO
 {
-    public class CollectionMetadataModel
+    public class CollectionMetadataDto
     {
         public long? RootId
         {
