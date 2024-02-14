@@ -15,13 +15,5 @@ namespace Core.Abstractions
         public IEnumerable<FileSystemItemDto>? GetFolderAncestors(long folderId);
 
         public CollectionMetadataDto GetCollectionMetadata(long? rootId);
-
-        // TODO: Extract next into a separate service
-
-        public Task<FileSystemItemDto> GetOrCreateFileSystemItemAsync(DirectoryInfo directoryInfo);
-
-        public Task<FileSystemItemDto?> GetByPathAsync(string path);
-
-        public Task UpsertAsync(IEnumerable<FileSystemItemDto> add, IEnumerable<FileSystemItemDto> update);
     }
 }

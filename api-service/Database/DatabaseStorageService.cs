@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Database
 {
-    internal class DatabaseStorageService : IStorageQueryService
+    internal class DatabaseStorageService : IStorageQueryService, IStorageService
     {
         private readonly GalleryContext DbContext;
 
@@ -36,7 +36,6 @@ namespace Database
             return item.ToDto();
         }
 
-        
         public IEnumerable<FileSystemItemDto> GetItems(int skip, int take)
         {
             IQueryable<FileSystemItem> items;
@@ -74,7 +73,7 @@ namespace Database
                 .Take(take);
 
             var result = new List<FileSystemItemDto>();
-            
+
             //TODO: can it be rewritten as lambda?
             foreach (var item in items)
             {

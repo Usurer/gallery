@@ -19,15 +19,18 @@ namespace FileSystem
     {
         private readonly FileSystemOptions FileSystemOptions;
 
-        private readonly IStorageQueryService StorageService;
+        private readonly IStorageService StorageService;
+
+        private readonly IStorageQueryService StorageQueryService;
 
         private readonly ILogger<FileSystemService> Logger;
 
-        public FileSystemService(IOptions<FileSystemOptions> options, IStorageQueryService storageService, ILogger<FileSystemService> logger)
+        public FileSystemService(IOptions<FileSystemOptions> options, IStorageService storageService, ILogger<FileSystemService> logger, IStorageQueryService storageQueryService)
         {
             FileSystemOptions = options.Value;
             StorageService = storageService;
             Logger = logger;
+            StorageQueryService = storageQueryService;
         }
 
         public async IAsyncEnumerable<ScanFolderResult> ScanFoldersFromRootAsync(string? root)
@@ -153,7 +156,7 @@ namespace FileSystem
 
         public FileItemData? GetImage(long id)
         {
-            var item = StorageService.GetItem(id);
+            var item = StorageQueryService.GetItem(id);
             if (item == null || item.IsFolder)
             {
                 Logger.LogWarning("Image with id {ImageId} was not found in the database", id);
