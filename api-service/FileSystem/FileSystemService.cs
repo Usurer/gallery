@@ -2,16 +2,13 @@
 using Core.Abstractions;
 using Core.DTO;
 using Core.Utils;
-using Database;
 using Imageflow.Bindings;
 using Imageflow.Fluent;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace FileSystem
 {
-
     /*
      * TODO: Refactor it
      * I don't like how it's implemented right now - it's not clear that this class writes to DB
@@ -81,7 +78,7 @@ namespace FileSystem
                 var fileSystemInfos = rootDirectoryInfo.EnumerateFileSystemInfos();
 
                 var batch = fileSystemInfos.Skip(batchCounter * batchSize).Take(batchSize).ToArray();
-                
+
                 var newItems = new List<FileSystemItemDto>();
                 var updatedItems = new List<FileSystemItemDto>();
 
@@ -102,7 +99,6 @@ namespace FileSystem
                             ImageInfo? imageInfo = null;
                             if (!isDirectory)
                             {
-                                var job = new ImageJob();
                                 using var imageData = File.OpenRead(fileSystemInfo.FullName);
                                 try
                                 {
@@ -153,6 +149,25 @@ namespace FileSystem
             }
 
             return result;
+        }
+
+        public FileItemData? GetImage(long id)
+        {
+            var item = StorageService.GetItem(id);
+            if (item == null || item.IsFolder)
+            {
+                Logger.LogWarning("Image with id {ImageId} was not found in the database", id);
+                return null;
+            }
+
+            var stream = new FileStream(item.Path, FileMode.Open);
+            var info = new FileItemData
+            {
+                Info = item,
+                Data = stream
+            };
+
+            return info;
         }
     }
 }

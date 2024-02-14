@@ -1,5 +1,4 @@
-﻿using Api.Exceptions;
-using Api.Utils;
+﻿using Api.Utils;
 using Core.Abstractions;
 using EasyCaching.Core;
 using Imageflow.Fluent;
@@ -8,16 +7,16 @@ namespace Api.Services
 {
     public class ImageResizeService
     {
-        private readonly IStorageService StorageService;
+        private readonly IFileSystemService FileSystemService;
         private readonly IEasyCachingProvider EasyCachingProvider;
         private readonly ILogger<ImageResizeService> Logger;
 
         public ImageResizeService(
-            IStorageService storageService,
+            IFileSystemService storageService,
             IEasyCachingProviderFactory easyCachingProviderFactory,
             ILogger<ImageResizeService> logger)
         {
-            StorageService = storageService;
+            FileSystemService = storageService;
             EasyCachingProvider = easyCachingProviderFactory.GetCachingProvider("disk");
             Logger = logger;
         }
@@ -29,11 +28,10 @@ namespace Api.Services
             var cacheResult = EasyCachingProvider.Get<ImageResizeResult>(key);
             if (!cacheResult.HasValue)
             {
-                using var imageData = StorageService.GetImage(id);
+                using var imageData = FileSystemService.GetImage(id);
 
                 if (imageData == null)
                 {
-                    Logger.LogWarning("Image with id {ImageId} was not found", id);
                     return null;
                 }
 

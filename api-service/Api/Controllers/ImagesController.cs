@@ -15,14 +15,17 @@ namespace Api.Controllers
     [Route("[controller]/[action]")]
     public class ImagesController : ControllerBase
     {
-        private readonly IStorageService _storageService;
+        private readonly IStorageService StorageService;
 
-        private readonly ImageResizeService _resizeService;
+        private readonly IFileSystemService FileSystemService;
 
-        public ImagesController(IStorageService storageService, ImageResizeService resizeService)
+        private readonly ImageResizeService ResizeService;
+
+        public ImagesController(IStorageService storageService, ImageResizeService resizeService, IFileSystemService fileSystemService)
         {
-            _storageService = storageService;
-            _resizeService = resizeService;
+            StorageService = storageService;
+            ResizeService = resizeService;
+            FileSystemService = fileSystemService;
         }
 
         [HttpGet()]
@@ -30,7 +33,7 @@ namespace Api.Controllers
         public Results<NotFound, FileStreamHttpResult> GetImage([BindRequired] long id)
         {
             // imageData is disposable because of the Data stream, but FileStreamResult should take care of it
-            var imageData = _storageService.GetImage(id);
+            var imageData = FileSystemService.GetImage(id);
 
             if (imageData == null)
             {
@@ -60,7 +63,7 @@ namespace Api.Controllers
                 );
             }
 
-            var result = await _resizeService.GetAsync(id, timestamp, width, height);
+            var result = await ResizeService.GetAsync(id, timestamp, width, height);
             if (result == null)
             {
                 return TypedResults.Problem(
@@ -78,7 +81,7 @@ namespace Api.Controllers
         [Route("")]
         public IEnumerable<FileItemInfoModel> ListItems(long? folderId, int skip = 0, int take = 10, [FromQuery] string[]? extensions = null)
         {
-            return _storageService.GetFileItems(folderId, skip, take, extensions).Select(x => x.ToFileModel());
+            return StorageService.GetFileItems(folderId, skip, take, extensions).Select(x => x.ToFileModel());
         }
     }
 }
