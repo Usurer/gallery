@@ -14,10 +14,10 @@ namespace Api.Controllers.Internal
     [Route("internals/[controller]/[action]")]
     public class FileSystemController : ControllerBase
     {
-        private readonly IStorageService StorageService;
+        private readonly IStorageQueryService StorageService;
         private readonly IFileSystemService FileSystemService;
 
-        public FileSystemController(IStorageService storageService, IFileSystemService fileSystemService)
+        public FileSystemController(IStorageQueryService storageService, IFileSystemService fileSystemService)
         {
             StorageService = storageService;
             FileSystemService = fileSystemService;

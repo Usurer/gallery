@@ -10,9 +10,9 @@ namespace Api.Controllers
     [ApiController]
     public class MetaController : ControllerBase
     {
-        private IStorageService _storageService;
+        private IStorageQueryService _storageService;
 
-        public MetaController(IStorageService storageService)
+        public MetaController(IStorageQueryService storageService)
         {
             _storageService = storageService;
         }

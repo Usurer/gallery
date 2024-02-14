@@ -17,7 +17,7 @@ namespace Database.Extensions
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
 
-            services.AddScoped<IStorageService, DatabaseStorageService>();
+            services.AddScoped<IStorageQueryService, DatabaseStorageService>();
             services.AddScoped<IScanStorageService, ScanStorageService>();
         }
     }

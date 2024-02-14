@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Database
 {
-    internal class DatabaseStorageService : IStorageService
+    internal class DatabaseStorageService : IStorageQueryService
     {
         private readonly GalleryContext DbContext;
 

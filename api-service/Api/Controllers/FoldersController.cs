@@ -9,9 +9,9 @@ namespace Api.Controllers
     [Route("[controller]/[action]")]
     public class FoldersController : ControllerBase
     {
-        private readonly IStorageService _storageService;
+        private readonly IStorageQueryService _storageService;
 
-        public FoldersController(IStorageService storageService)
+        public FoldersController(IStorageQueryService storageService)
         {
             _storageService = storageService;
         }

@@ -19,11 +19,11 @@ namespace FileSystem
     {
         private readonly FileSystemOptions FileSystemOptions;
 
-        private readonly IStorageService StorageService;
+        private readonly IStorageQueryService StorageService;
 
         private readonly ILogger<FileSystemService> Logger;
 
-        public FileSystemService(IOptions<FileSystemOptions> options, IStorageService storageService, ILogger<FileSystemService> logger)
+        public FileSystemService(IOptions<FileSystemOptions> options, IStorageQueryService storageService, ILogger<FileSystemService> logger)
         {
             FileSystemOptions = options.Value;
             StorageService = storageService;

@@ -13,9 +13,9 @@ namespace Api.Controllers.Internal
     public class DatabaseController : ControllerBase
     {
         private readonly ILogger<DatabaseController> Logger;
-        private readonly IStorageService StorageService;
+        private readonly IStorageQueryService StorageService;
 
-        public DatabaseController(ILogger<DatabaseController> logger, IStorageService storageService)
+        public DatabaseController(ILogger<DatabaseController> logger, IStorageQueryService storageService)
         {
             Logger = logger;
             StorageService = storageService;

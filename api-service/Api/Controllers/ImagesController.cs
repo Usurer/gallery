@@ -15,13 +15,13 @@ namespace Api.Controllers
     [Route("[controller]/[action]")]
     public class ImagesController : ControllerBase
     {
-        private readonly IStorageService StorageService;
+        private readonly IStorageQueryService StorageService;
 
         private readonly IFileSystemService FileSystemService;
 
         private readonly ImageResizeService ResizeService;
 
-        public ImagesController(IStorageService storageService, ImageResizeService resizeService, IFileSystemService fileSystemService)
+        public ImagesController(IStorageQueryService storageService, ImageResizeService resizeService, IFileSystemService fileSystemService)
         {
             StorageService = storageService;
             ResizeService = resizeService;

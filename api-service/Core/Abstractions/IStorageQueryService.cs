@@ -2,7 +2,7 @@
 
 namespace Core.Abstractions
 {
-    public interface IStorageService
+    public interface IStorageQueryService
     {
         public FileSystemItemDto? GetItem(long id);
 
