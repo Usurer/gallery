@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ComponentStore, tapResponse } from '@ngrx/component-store';
 import { FolderInfo } from '../../../dto/folder-info';
-import { Observable, switchMap } from 'rxjs';
+import { Observable, filter, switchMap } from 'rxjs';
 import { SettingsService } from 'src/app/services/settings.service';
 
 interface Store {
@@ -17,9 +17,11 @@ export class FolderHierarchyStore extends ComponentStore<Store> {
 
     readonly fetchHierarcy = this.effect((folderId$: Observable<number>) => {
         return folderId$.pipe(
+            filter((folderId) => !!folderId),
             switchMap((folderId) => {
-                const folderParam = folderId ? `${folderId}` : '';
-                return this.httpClient.get<FolderInfo[]>(`${this.settings.environment.foldersApiUri}/GetAncestors/${folderParam}`);
+                return this.httpClient.get<FolderInfo[]>(
+                    `${this.settings.environment.foldersApiUri}/GetAncestors/${folderId}`
+                );
             }),
             tapResponse(
                 (folders) => this.setItems(folders),
