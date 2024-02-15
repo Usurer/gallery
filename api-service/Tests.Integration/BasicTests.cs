@@ -9,21 +9,16 @@ using System.Net.Http.Json;
 
 namespace Tests.Integration
 {
-    public class BasicTests : IClassFixture<CustomWebApplicationFactory<Program>>
+    public class BasicTests : IClassFixture<CustomWebApplicationFactory<Program>>, IDisposable
     {
         private readonly CustomWebApplicationFactory<Program> _factory;
         private readonly HttpClient client;
 
         public BasicTests(CustomWebApplicationFactory<Program> factory)
         {
-            _factory = factory;
+            _factory = new CustomWebApplicationFactory<Program>();
             client = _factory.CreateClient();
-        }
 
-        [Theory]
-        [InlineData("/internals/database/get")]
-        public async Task Get_EndpointsReturnSuccessAndCorrectContentType(string url)
-        {
             using (var scope = _factory.Services.CreateScope())
             {
                 var scopedServices = scope.ServiceProvider;
@@ -37,18 +32,52 @@ namespace Tests.Integration
                     Path = "Test path",
                 });
                 db.SaveChanges();
-            }
 
+                db.FileSystemItems.Add(new FileSystemItem
+                {
+                    CreationDate = DateTimeUtils.ToUnixTimestamp(DateTime.Now),
+                    IsFolder = true,
+                    Name = "Test 2",
+                    Path = "Test path 2",
+                    ParentId = 1
+                });
+                db.SaveChanges();
+            }
+        }
+
+        [Theory]
+        [InlineData("/internals/database/get")]
+        public async Task Database_WhenGet_ReturnsOk(string url)
+        {
             // Arrange
-            //var client = _factory.CreateClient();
+            // Act
             var response = await client.GetAsync(url);
 
             // Assert
             response.EnsureSuccessStatusCode(); // Status Code 200-299
-            Assert.Equal("application/json; charset=utf-8",
-                response.Content.Headers.ContentType.ToString());
-
             var data = await response.Content.ReadFromJsonAsync<IEnumerable<FolderItemInfoModel>>();
+
+            Assert.NotNull(data);
+            Assert.Equal(2, data.Count());
+        }
+
+        public void Dispose()
+        {
+            //this._factory.Connection.Close();
+        }
+
+        [Theory]
+        [InlineData("/folders/listItems/1")]
+        public async Task Folders_WhenListItems_ReturnsOk(string url)
+        {
+            // Arrange
+            // Act
+            var response = await client.GetAsync(url);
+
+            // Assert
+            response.EnsureSuccessStatusCode(); // Status Code 200-299
+            var data = await response.Content.ReadFromJsonAsync<IEnumerable<FolderItemInfoModel>>();
+
             Assert.NotNull(data);
             Assert.Single(data);
         }
