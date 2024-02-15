@@ -1,12 +1,12 @@
 ﻿using Database.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Tests.Integration")]
 
 namespace Database;
 
-
-// TODO: I don't want to expose the Context from Database namespace
-// All consumers should use methods provided by services
-internal class GalleryContext : DbContext
+internal class GalleryContext : DbContext, IGalleryContext
 {
     public GalleryContext(DbContextOptions<GalleryContext> options) : base(options)
     {
