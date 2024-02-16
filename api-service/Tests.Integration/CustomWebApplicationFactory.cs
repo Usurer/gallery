@@ -6,36 +6,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Data.Common;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ProtoBuf.Meta;
 
 namespace Tests.Integration
 {
     public class CustomWebApplicationFactory<TProgram>
     : WebApplicationFactory<TProgram> where TProgram : class
     {
-        // It is possible for the SQLite to get rid of in-memory db
-        // as soon as it has no opened connections (which makes sense).
-        // To prevent this I'm going to have this Connection opened until
-        // the WebAppFactory is disposed.
-        public SqliteConnection Connection;
+        private SqliteConnection Connection;
 
-        protected override void Dispose(bool disposing)
-        {
-            if (this.Connection != null)
-            {
-                this.Connection.Close();
-            }
-
-            base.Dispose(disposing);
-        }
-
-        /// <summary>
-        /// Executed when the client is created by the Factory
-        /// </summary>
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             //base.ConfigureWebHost(builder);
-            builder.UseEnvironment("Development");
+            builder.UseEnvironment("tests");
 
             builder.ConfigureServices(services =>
             {
@@ -52,10 +34,6 @@ namespace Tests.Integration
 
                 var sp = services.BuildServiceProvider();
             });
-        }
-
-        protected void RecreateDb()
-        {
         }
     }
 }

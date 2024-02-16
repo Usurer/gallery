@@ -2,19 +2,17 @@ using Api;
 using Api.Models;
 using Core.Utils;
 using Database;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http.Json;
 
 namespace Tests.Integration
 {
-    public class BasicTests : IClassFixture<CustomWebApplicationFactory<Program>>, IDisposable
+    public class BasicTests : IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private readonly CustomWebApplicationFactory<Program> _factory;
         private readonly HttpClient client;
 
-        public BasicTests(CustomWebApplicationFactory<Program> factory)
+        public BasicTests()
         {
             _factory = new CustomWebApplicationFactory<Program>();
             client = _factory.CreateClient();
@@ -54,16 +52,11 @@ namespace Tests.Integration
             var response = await client.GetAsync(url);
 
             // Assert
-            response.EnsureSuccessStatusCode(); // Status Code 200-299
+            response.EnsureSuccessStatusCode();
             var data = await response.Content.ReadFromJsonAsync<IEnumerable<FolderItemInfoModel>>();
 
             Assert.NotNull(data);
             Assert.Equal(2, data.Count());
-        }
-
-        public void Dispose()
-        {
-            //this._factory.Connection.Close();
         }
 
         [Theory]
@@ -75,7 +68,7 @@ namespace Tests.Integration
             var response = await client.GetAsync(url);
 
             // Assert
-            response.EnsureSuccessStatusCode(); // Status Code 200-299
+            response.EnsureSuccessStatusCode();
             var data = await response.Content.ReadFromJsonAsync<IEnumerable<FolderItemInfoModel>>();
 
             Assert.NotNull(data);
