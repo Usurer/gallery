@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
-    [Route("[controller]/[action]")]
+    [Route("[controller]")]
     [ApiController]
     public class ScansController : ControllerBase
     {
@@ -19,7 +19,7 @@ namespace Api.Controllers
         }
 
         [HttpPut]
-        public async Task<Ok> AddScan([FromBody] string path)
+        public async Task<Ok> Put([FromBody] string path)
         {
             var id = await storageService.AddFolderToScansAsync(path);
 

@@ -9,24 +9,30 @@ namespace Api.Controllers
     [Route("[controller]/[action]")]
     public class FoldersController : ControllerBase
     {
-        private readonly IStorageQueryService _storageService;
+        private readonly IStorageQueryService StorageService;
 
         public FoldersController(IStorageQueryService storageService)
         {
-            _storageService = storageService;
+            StorageService = storageService;
+        }
+
+        [HttpGet("/[controller]/{folderId}")]
+        [HttpGet("/[controller]")]
+        public IEnumerable<FolderItemInfoModel> Get(long? folderId, int skip = 0, int take = 10)
+        {
+            return StorageService.GetFolderItems(folderId, skip, take).Select(x => x.ToFolderModel());
         }
 
         [HttpGet("{folderId}")]
-        [HttpGet()]
-        public IEnumerable<FolderItemInfoModel> ListItems(long? folderId, int skip = 0, int take = 10)
+        public IEnumerable<FileItemInfoModel> Files(long? folderId, int skip = 0, int take = 10, [FromQuery] string[]? extensions = null)
         {
-            return _storageService.GetFolderItems(folderId, skip, take).Select(x => x.ToFolderModel());
+            return StorageService.GetFileItems(folderId, skip, take, extensions).Select(x => x.ToFileModel());
         }
 
         [HttpGet("{folderId}")]
-        public Results<Ok<IEnumerable<FolderItemInfoModel>>, ProblemHttpResult> GetAncestors(long folderId)
+        public Results<Ok<IEnumerable<FolderItemInfoModel>>, ProblemHttpResult> Ancestors(long folderId)
         {
-            var result = _storageService.GetFolderAncestors(folderId);
+            var result = StorageService.GetFolderAncestors(folderId);
             if (result == null)
             {
                 return TypedResults.Problem(

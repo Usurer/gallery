@@ -10,24 +10,24 @@ namespace Api.Controllers
     [ApiController]
     public class MetaController : ControllerBase
     {
-        private IStorageQueryService _storageService;
+        private IStorageQueryService StorageService;
 
         public MetaController(IStorageQueryService storageService)
         {
-            _storageService = storageService;
+            StorageService = storageService;
         }
 
         [HttpGet]
-        public IResult GetImagesMetadata(long? parentId)
+        public IResult FolderImages(long? parentId)
         {
-            var result = _storageService.GetCollectionMetadata(parentId);
+            var result = StorageService.GetCollectionMetadata(parentId);
             return TypedResults.Ok(result);
         }
 
         [HttpGet]
-        public Results<ProblemHttpResult, Ok<ItemInfoModel>> GetItemMetadata([BindRequired] long id)
+        public Results<ProblemHttpResult, Ok<ItemInfoModel>> Item([BindRequired] long id)
         {
-            var result = _storageService.GetItem(id)?.ToItemModel();
+            var result = StorageService.GetItem(id)?.ToItemModel();
             if (result == null)
             {
                 return TypedResults.Problem(

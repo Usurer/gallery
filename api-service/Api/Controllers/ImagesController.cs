@@ -12,25 +12,21 @@ namespace Api.Controllers
     /// List images, get image by ID
     /// </summary>
     [ApiController]
-    [Route("[controller]/[action]")]
     public class ImagesController : ControllerBase
     {
-        private readonly IStorageQueryService StorageService;
-
         private readonly IFileSystemService FileSystemService;
 
         private readonly ImageResizeService ResizeService;
 
-        public ImagesController(IStorageQueryService storageService, ImageResizeService resizeService, IFileSystemService fileSystemService)
+        public ImagesController(ImageResizeService resizeService, IFileSystemService fileSystemService)
         {
-            StorageService = storageService;
             ResizeService = resizeService;
             FileSystemService = fileSystemService;
         }
 
-        [HttpGet()]
+        [HttpGet("[controller]/{id}")]
         [ResponseCache(Duration = 60)]
-        public Results<NotFound, FileStreamHttpResult> GetImage([BindRequired] long id)
+        public Results<NotFound, FileStreamHttpResult> Get([BindRequired] long id)
         {
             // imageData is disposable because of the Data stream, but FileStreamResult should take care of it
             var imageData = FileSystemService.GetImage(id);
@@ -45,11 +41,11 @@ namespace Api.Controllers
             return TypedResults.File(imageData.Data, mime, imageData.Info.Name);
         }
 
-        [HttpGet()]
+        [HttpGet("[controller]/{id}/[action]")]
         [ResponseCache(Duration = 3600 * 24)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-        public async Task<Results<ProblemHttpResult, FileContentHttpResult>> GetImagePreview(
+        public async Task<Results<ProblemHttpResult, FileContentHttpResult>> Preview(
             [BindRequired] long id, int timestamp, int? width, int? height
         )
         {
@@ -74,14 +70,6 @@ namespace Api.Controllers
             }
 
             return TypedResults.File(result.Data, contentType: result.MimeType);
-        }
-
-        [HttpGet]
-        [Route("{folderId}")]
-        [Route("")]
-        public IEnumerable<FileItemInfoModel> ListItems(long? folderId, int skip = 0, int take = 10, [FromQuery] string[]? extensions = null)
-        {
-            return StorageService.GetFileItems(folderId, skip, take, extensions).Select(x => x.ToFileModel());
         }
     }
 }
