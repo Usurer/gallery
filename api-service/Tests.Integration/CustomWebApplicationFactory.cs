@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Data.Common;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Configuration;
 
 namespace Tests.Integration
 {
@@ -16,15 +17,17 @@ namespace Tests.Integration
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            //base.ConfigureWebHost(builder);
             builder.UseEnvironment("tests");
 
-            builder.ConfigureServices(services =>
+            //base.ConfigureWebHost(builder);
+
+            builder.ConfigureServices((context, services) =>
             {
                 services.RemoveAll(typeof(DbContextOptions<GalleryContext>));
                 services.RemoveAll(typeof(DbConnection));
 
-                Connection = new SqliteConnection();
+                var connectionString = context.Configuration.GetConnectionString("sqlite");
+                Connection = new SqliteConnection(connectionString);
                 Connection.Open();
 
                 services.AddDbContext<GalleryContext>((container, options) =>
