@@ -27,9 +27,8 @@ namespace Api
 
             builder.Services.AddControllers();
 
-            
             AddSwagger(builder);
-            
+
             builder.Services.AddSqliteDbStorage(builder.Configuration);
 
             builder.Services.Configure<FileSystemOptions>(fileSystemConfigSection);
@@ -69,13 +68,14 @@ namespace Api
             app.UseCors();
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+            if (!app.Environment.IsProduction())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
             else
             {
+                // TODO: This will throw an exception, lol. Figure out and fix
                 app.UseExceptionHandler();
             }
 
