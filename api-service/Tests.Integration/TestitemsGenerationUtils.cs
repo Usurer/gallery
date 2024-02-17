@@ -1,19 +1,27 @@
-﻿using Core.Utils;
+﻿using Api;
+using Core.Utils;
 using Database;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Tests.Integration
 {
-    internal class TestitemsGenerationUtils
+    public class TestitemsGenerationUtils
     {
         public const string BASE_PATH = @"testpath:\subfolder\roots";
 
         private static Func<string, string> CreatePath = (string path) => $@"{BASE_PATH}\{path}";
+
+        public static void AddToDb(IServiceProvider services, IEnumerable<FileSystemItem> items)
+        {
+            using (var scope = services.CreateScope())
+            {
+                var scopedServices = scope.ServiceProvider;
+                var db = scopedServices.GetRequiredService<GalleryContext>();
+
+                db.FileSystemItems.AddRange(items);
+                db.SaveChanges();
+            }
+        }
 
         public static IEnumerable<FileSystemItem> GenerateRootFolders(int count)
         {
@@ -27,8 +35,8 @@ namespace Tests.Integration
         {
             for (int i = 0; i < count; i++)
             {
-                var item = generateFolders 
-                    ? GenerateFolder(parentId, i.ToString()) 
+                var item = generateFolders
+                    ? GenerateFolder(parentId, i.ToString())
                     : GenerateFile(parentId, i.ToString());
 
                 yield return item;
