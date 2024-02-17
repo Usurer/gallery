@@ -134,8 +134,6 @@ namespace Database
                 return null;
             }
 
-            ansectors.Add(currentFolder);
-
             var parent = DbContext
                 .FileSystemItems
                 .SingleOrDefault(x => x.Id == currentFolder.ParentId && x.IsFolder);
