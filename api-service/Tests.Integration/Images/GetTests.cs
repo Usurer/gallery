@@ -40,5 +40,18 @@ namespace Tests.Integration.Images
             // Assert
             response.EnsureSuccessStatusCode();
         }
+
+        [Fact]
+        public async Task WhenNonExistantIdProvided_ThenReturns404Result()
+        {
+            // Arrange
+            SeedDb();
+
+            // Act
+            var response = await Client.GetAsync($@"/images/999");
+
+            // Assert
+            Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
+        }
     }
 }
