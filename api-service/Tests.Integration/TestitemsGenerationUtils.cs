@@ -75,7 +75,13 @@ namespace Tests.Integration
 
         public static string GetImagePath(string name = "blank_01", string format = "jpg")
         {
-            return Path.Combine(Environment.CurrentDirectory, @$"SampleData\Images\{format}\{name}.{format}");
+            return Path.Combine(
+                Environment.CurrentDirectory,
+                "SampleData",
+                "Images",
+                $"{format}",
+                $"{name}.{format}"
+            );
         }
     }
 }
