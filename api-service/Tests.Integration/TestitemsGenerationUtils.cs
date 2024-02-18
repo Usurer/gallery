@@ -72,5 +72,10 @@ namespace Tests.Integration
                 ParentId = parentId
             };
         }
+
+        public static string GetImagePath(string name = "blank_01", string format = "jpg")
+        {
+            return Path.Combine(Environment.CurrentDirectory, @$"SampleData\Images\{format}\{name}.{format}");
+        }
     }
 }
