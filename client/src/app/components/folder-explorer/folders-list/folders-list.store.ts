@@ -23,7 +23,7 @@ export class FoldersListStore extends ComponentStore<FoldersListState> {
                 const parentId = query.parentId ? `${query.parentId}` : '';
                 const take = query.take ?? 10;
                 const skip = query.skip ?? folders.length ?? 0;
-                const url = `${this.settings.environment.foldersApiUri}/ListItems/${parentId}?take=${take}&skip=${skip}`;
+                const url = `${this.settings.environment.foldersApiUri}/${parentId}?take=${take}&skip=${skip}`;
 
                 return this.httpClient.get<FolderInfo[]>(url).pipe(
                     tapResponse(

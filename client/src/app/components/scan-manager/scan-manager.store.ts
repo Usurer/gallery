@@ -31,7 +31,7 @@ export class ScanManagerStore extends ComponentStore<ScanManagerState> {
                     'Content-Type': 'application/json',
                 };
                 return this.httpClient
-                    .put(`${this.settings.environment.scansApiUri}/AddScan`, JSON.stringify(path), {
+                    .put(`${this.settings.environment.scansApiUri}`, JSON.stringify(path), {
                         headers,
                     })
                     .pipe(

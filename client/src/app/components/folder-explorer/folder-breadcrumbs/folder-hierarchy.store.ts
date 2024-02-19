@@ -20,7 +20,7 @@ export class FolderHierarchyStore extends ComponentStore<Store> {
             filter((folderId) => !!folderId),
             switchMap((folderId) => {
                 return this.httpClient.get<FolderInfo[]>(
-                    `${this.settings.environment.foldersApiUri}/GetAncestors/${folderId}`
+                    `${this.settings.environment.foldersApiUri}/${folderId}/ancestors`
                 );
             }),
             tapResponse(

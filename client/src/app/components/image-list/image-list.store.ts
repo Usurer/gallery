@@ -30,7 +30,10 @@ export class ImageListStore extends ComponentStore<ImagesState> {
                 const take = query.take ?? 10;
                 const skip = query.skip ?? images.length ?? 0;
                 const extensions = ['.jpg', '.jpeg'].map((x) => `&extensions=${x}`).join('');
-                const url = `${this.settings.environment.imagesApiUri}/ListItems/${parentId}?take=${take}&skip=${skip}${extensions}`;
+                const url =
+                    `${this.settings.environment.foldersApiUri}/` +
+                    `${parentId}${parentId ? '/' : ''}` +
+                    `files?take=${take}&skip=${skip}${extensions}`;
 
                 return this.httpClient.get<ImageInfo[]>(url).pipe(
                     tapResponse(
