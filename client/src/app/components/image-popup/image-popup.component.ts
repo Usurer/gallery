@@ -5,6 +5,7 @@ import { ClickNotificationService } from '../../services/click-notification.serv
 import { ImageComponent } from '../image/image.component';
 import { HttpClient } from '@angular/common/http';
 import { ImageInfo } from '../../dto/image-info';
+import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
     selector: 'glr-image-popup',
@@ -30,13 +31,15 @@ export class ImagePopupComponent {
     constructor(
         private route: ActivatedRoute,
         private clickNotification: ClickNotificationService,
-        private http: HttpClient
+        private http: HttpClient,
+        private settings: SettingsService
     ) {
         this.itemInfo$ = this.route.paramMap.pipe(
             switchMap((x: ParamMap) => {
                 if (x.has('id')) {
                     const id = x.get('id');
-                    return this.http.get<ImageInfo>('http://localhost:5279/Meta/GetItemMetadata?id=' + id);
+                    // TODO: Use MetadataService
+                    return this.http.get<ImageInfo>(`${settings.environment.metaApiUri}/${id}`);
                 }
 
                 return EMPTY;

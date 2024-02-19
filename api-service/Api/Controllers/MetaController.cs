@@ -2,11 +2,10 @@
 using Core.Abstractions;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Api.Controllers
 {
-    [Route("[controller]/[action]")]
+    [Route("[controller]")]
     [ApiController]
     public class MetaController : ControllerBase
     {
@@ -17,15 +16,15 @@ namespace Api.Controllers
             StorageService = storageService;
         }
 
-        [HttpGet]
-        public IResult FolderImages(long? parentId)
+        [HttpGet("[action]/{folderId}")]
+        public IResult FolderImages(long? folderId)
         {
-            var result = StorageService.GetCollectionMetadata(parentId);
+            var result = StorageService.GetCollectionMetadata(folderId);
             return TypedResults.Ok(result);
         }
 
-        [HttpGet]
-        public Results<ProblemHttpResult, Ok<ItemInfoModel>> Item([BindRequired] long id)
+        [HttpGet("{id}")]
+        public Results<ProblemHttpResult, Ok<ItemInfoModel>> Item(long id)
         {
             var result = StorageService.GetItem(id)?.ToItemModel();
             if (result == null)

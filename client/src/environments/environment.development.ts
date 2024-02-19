@@ -5,4 +5,5 @@ export const environment: EnvironmentConfig = {
     imagesApiUri: 'http://localhost:5279/Images',
     foldersApiUri: 'http://localhost:5279/Folders',
     scansApiUri: 'http://localhost:5279/Scans',
+    metaApiUri: 'http://localhost:5279/Meta',
 };

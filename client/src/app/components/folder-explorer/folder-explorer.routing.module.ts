@@ -25,7 +25,7 @@ const isRootIdSet: CanActivateFn = (routeSnapshot: ActivatedRouteSnapshot, state
     // We use the service call to get the default root folder ID in case the rootId is not set
     // I.e. for localhost/folder request, user will be redirected to
     // localhost/folder/default_folderId_received_from_API
-    return service.getImagesMetadata(isNaN(rootId) ? undefined : rootId).pipe(
+    return service.getCollectionMetadata(isNaN(rootId) ? undefined : rootId).pipe(
         map((x) => {
             if (isNaN(rootId) && x) {
                 router.navigate([CURRENT_ROOT, x.rootId], { relativeTo: activatedRoute });
