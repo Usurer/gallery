@@ -14,6 +14,7 @@ import { FolderExplorerModule } from './components/folder-explorer/folder-explor
 import { ENVIRONMENT_CONFIG } from '../environments/environment-config';
 import { environment } from '../environments/environment';
 import { ScanManagerModule } from './components/scan-manager/scan-manager.module';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 @NgModule({
     declarations: [PlaceholderComponent, AppComponent],
@@ -28,6 +29,7 @@ import { ScanManagerModule } from './components/scan-manager/scan-manager.module
         AppRoutingModule,
         BrowserAnimationsModule,
         MatIconModule,
+        MatSidenavModule,
     ],
     providers: [{ provide: ENVIRONMENT_CONFIG, useValue: environment }],
     bootstrap: [AppComponent],

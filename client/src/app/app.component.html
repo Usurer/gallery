@@ -1,2 +1,11 @@
 <!-- <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon> -->
-<router-outlet></router-outlet>
+
+<mat-sidenav-container autosize>
+    <mat-sidenav opened disableClose class="sidenav" mode="side">
+        <mat-icon fontIcon="library_add"></mat-icon>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
+</mat-sidenav-container>
+
