@@ -22,7 +22,7 @@ export class ImageComponent {
 
     set id(value: string) {
         this._id = value;
-        this.query = `http://localhost:5279/Images/GetImage?id=${value}`;
+        this.query = `http://localhost:5279/Images/${value}`;
     }
 
     @Input()
