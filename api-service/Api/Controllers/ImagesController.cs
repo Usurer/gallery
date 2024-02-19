@@ -1,5 +1,4 @@
-﻿using Api.Models;
-using Api.Services;
+﻿using Api.Services;
 using Api.Utils;
 using Core.Abstractions;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -69,7 +68,11 @@ namespace Api.Controllers
                 );
             }
 
-            return TypedResults.File(result.Data, contentType: result.MimeType);
+            return TypedResults.File(
+                result.Data,
+                contentType: result.MimeType,
+                fileDownloadName: result.Name
+            );
         }
     }
 }

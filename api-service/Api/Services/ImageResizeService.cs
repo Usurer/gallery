@@ -50,7 +50,12 @@ namespace Api.Services
 
                 var data = resizedStream.ToArray();
                 var mime = MimeUtils.ExtensionToMime(imageData.Info.Extension);
-                var result = new ImageResizeResult { Data = data, MimeType = mime };
+                var result = new ImageResizeResult
+                {
+                    Data = data,
+                    MimeType = mime,
+                    Name = imageData.Info.Name
+                };
                 try
                 {
                     EasyCachingProvider.Set<ImageResizeResult>(key, result, TimeSpan.FromDays(1));
@@ -79,6 +84,11 @@ namespace Api.Services
         }
 
         public required string MimeType
+        {
+            get; set;
+        }
+
+        public required string Name
         {
             get; set;
         }
