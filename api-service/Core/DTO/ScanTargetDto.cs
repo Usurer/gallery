@@ -7,7 +7,17 @@
             get; set;
         }
 
-        public string? Path
+        public required string Path
+        {
+            get; set;
+        }
+
+        public required bool IsScanned
+        {
+            get; set;
+        }
+
+        public bool IsInvalid
         {
             get; set;
         }

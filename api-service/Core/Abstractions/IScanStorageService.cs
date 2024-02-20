@@ -1,4 +1,6 @@
-﻿namespace Core.Abstractions
+﻿using Core.DTO;
+
+namespace Core.Abstractions
 {
     public interface IScanStorageService
     {
@@ -6,8 +8,12 @@
 
         public Task RemoveFolderFromScansAsync(long id);
 
-        public Task<(long id, string path)?> GetScanTarget();
+        public Task UpdateScanTarget(ScanTargetDto item);
 
-        public Task<(long id, string path)?> GetScanTarget(long id);
+        public Task<ScanTargetDto[]> GetAll();
+
+        public Task<ScanTargetDto?> GetScanTarget(bool ignoreScanned = true);
+
+        public Task<ScanTargetDto?> GetScanTarget(long id, bool ignoreScanned = true);
     }
 }

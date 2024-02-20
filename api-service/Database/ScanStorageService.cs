@@ -1,4 +1,5 @@
 ﻿using Core.Abstractions;
+using Core.DTO;
 using Database.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -37,6 +38,14 @@ namespace Database
             return entity.Id;
         }
 
+        public async Task UpdateScanTarget(ScanTargetDto item)
+        {
+            var entity = await DbContext.ScanTargets.Where(x => x.Id == item.Id).AsTracking().SingleAsync();
+            entity.IsScanned = item.IsScanned;
+            entity.IsInvalid = item.IsInvalid;
+            await DbContext.SaveChangesAsync();
+        }
+
         public async Task RemoveFolderFromScansAsync(long id)
         {
             var item = await DbContext.ScanTargets.Where(x => x.Id == id).SingleAsync();
@@ -44,23 +53,43 @@ namespace Database
             await DbContext.SaveChangesAsync();
         }
 
-        public async Task<(long id, string path)?> GetScanTarget()
+        public async Task<ScanTargetDto[]> GetAll()
         {
-            var item = await DbContext.ScanTargets.OrderBy(x => x.Id).FirstOrDefaultAsync();
+            return await DbContext
+                .ScanTargets
+                .OrderBy(x => x.Id)
+                .Select(x => new ScanTargetDto { Id = x.Id, Path = x.Path, IsScanned = x.IsScanned })
+                .ToArrayAsync();
+        }
+
+        public async Task<ScanTargetDto?> GetScanTarget(bool ignoreScanned = true)
+        {
+            var item = await DbContext
+                .ScanTargets
+                .OrderBy(x => x.Id)
+                .FirstOrDefaultAsync(x => ignoreScanned ? x.IsScanned == false : true);
+
             if (item != null)
             {
-                return new(item.Id, item.Path);
+                return new ScanTargetDto { Id = item.Id, Path = item.Path, IsScanned = item.IsScanned };
             }
+
+            Logger.LogInformation("Not found next ScanTarget, scanned items ignored {@IgnoreScanned}", ignoreScanned);
             return null;
         }
 
-        public async Task<(long id, string path)?> GetScanTarget(long id)
+        public async Task<ScanTargetDto?> GetScanTarget(long id, bool ignoreScanned = true)
         {
-            var item = await DbContext.ScanTargets.SingleOrDefaultAsync(x => x.Id == id);
+            var item = await DbContext
+                .ScanTargets
+                .SingleOrDefaultAsync(x => x.Id == id && (ignoreScanned ? x.IsScanned == false : true));
+
             if (item != null)
             {
-                return new(item.Id, item.Path);
+                return new ScanTargetDto { Id = item.Id, Path = item.Path, IsScanned = item.IsScanned };
             }
+
+            Logger.LogInformation("Not found ScanTarget {@Id}, scanned items ignored {@IgnoreScanned}", id, ignoreScanned);
             return null;
         }
     }

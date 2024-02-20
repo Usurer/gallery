@@ -1,5 +1,4 @@
 ﻿using Core.Abstractions;
-using Database;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Concurrent;
 
@@ -43,21 +42,26 @@ namespace Api.Services
                 var scope = ServiceProvider.CreateScope();
                 var storageService = scope.ServiceProvider.GetRequiredService<IScanStorageService>();
                 var fileSystemService = scope.ServiceProvider.GetRequiredService<IFileSystemService>();
+                var logger = scope.ServiceProvider.GetRequiredService<ILogger<ScansProcessingService>>();
 
-                try
+                var item = await storageService.GetScanTarget(id);
+                if (item != null)
                 {
-                    var item = await storageService.GetScanTarget(id);
-                    if (item != null)
+                    try
                     {
-                        _ = await fileSystemService.ScanFoldersFromRootAsync(item.Value.path).ToArrayAsync();
-
-                        await storageService.RemoveFolderFromScansAsync(item.Value.id);
+                        _ = await fileSystemService.ScanFoldersFromRootAsync(item.Path).ToArrayAsync();
                     }
-                }
-                catch (Exception)
-                {
-                    // TODO: Log
-                    throw;
+                    catch (Exception ex)
+                    {
+                        logger.LogError(ex, "Scan failed of scan target {Id}", item.Id);
+
+                        item.IsInvalid = true;
+                    }
+                    finally
+                    {
+                        item.IsScanned = true;
+                        await storageService.UpdateScanTarget(item);
+                    }
                 }
             }
             Interlocked.Exchange(ref RunningScanLock, 0);

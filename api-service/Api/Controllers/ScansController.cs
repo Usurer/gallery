@@ -1,5 +1,6 @@
 ﻿using Api.Services;
 using Core.Abstractions;
+using Core.DTO;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,13 +20,20 @@ namespace Api.Controllers
         }
 
         [HttpPut]
-        public async Task<Ok> Put([FromBody] string path)
+        public async Task<Ok<long>> Put([FromBody] string path)
         {
             var id = await storageService.AddFolderToScansAsync(path);
 
             // TODO: Figure out the proper way to do error handling here
             _ = ScansProcessingService.EnqueueNextScanAsync(id);
-            return TypedResults.Ok();
+            return TypedResults.Ok(id);
+        }
+
+        [HttpGet]
+        public async Task<Ok<ScanTargetDto[]>> Get()
+        {
+            var items = await storageService.GetAll();
+            return TypedResults.Ok(items);
         }
     }
 }

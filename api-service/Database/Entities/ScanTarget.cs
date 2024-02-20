@@ -11,7 +11,17 @@ namespace Database.Entities
             get; set;
         }
 
-        public string? Path
+        public string Path
+        {
+            get; set;
+        }
+
+        public bool IsScanned
+        {
+            get; set;
+        }
+
+        public bool IsInvalid
         {
             get; set;
         }

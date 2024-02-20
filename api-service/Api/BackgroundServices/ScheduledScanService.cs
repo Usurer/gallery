@@ -37,11 +37,11 @@ namespace Api.BackgroundServices
             var fileSystemService = scope.ServiceProvider.GetRequiredService<IFileSystemService>();
 
             var item = await storageService.GetScanTarget();
-            if (item.HasValue)
+            if (item != null)
             {
                 // TODO: We do not return the result of this execution, so pushing it to memory with the ToArrayAsync() isn't good.
                 // Probably I can rewrite the ScanFoldersFromRootAsync itself, to create a version that puts data to DB, but doesn't return it
-                await fileSystemService.ScanFoldersFromRootAsync(item.Value.path).ToArrayAsync();
+                await fileSystemService.ScanFoldersFromRootAsync(item.Path).ToArrayAsync();
             }
 
             IsRunning = false;
