@@ -9,5 +9,7 @@ namespace Core.Abstractions
         public Task<FileSystemItemDto?> GetByPathAsync(string path);
 
         public Task UpsertAsync(IEnumerable<FileSystemItemDto> add, IEnumerable<FileSystemItemDto> update);
+
+        public Task Purge();
     }
 }

@@ -1,6 +1,7 @@
 using Api.Models;
 using Core.Abstractions;
 using Core.DTO;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers.Internal
@@ -40,6 +41,13 @@ namespace Api.Controllers.Internal
 
             await StorageService.UpsertAsync([item], Enumerable.Empty<FileSystemItemDto>());
 
+            return Results.Ok();
+        }
+
+        [HttpDelete]
+        public async Task<IResult> Purge()
+        {
+            await StorageService.Purge();
             return Results.Ok();
         }
     }

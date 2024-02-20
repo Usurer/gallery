@@ -250,5 +250,11 @@ namespace Database
 
             await DbContext.SaveChangesAsync();
         }
+
+        public async Task Purge()
+        {
+            await DbContext.Database.EnsureDeletedAsync();
+            await DbContext.Database.EnsureCreatedAsync();
+        }
     }
 }
