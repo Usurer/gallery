@@ -49,7 +49,7 @@ namespace Api.Services
                 {
                     try
                     {
-                        _ = await fileSystemService.ScanFoldersFromRootAsync(item.Path).ToArrayAsync();
+                        var result = await fileSystemService.ScanFoldersFromRootAsync(item.Path).ToArrayAsync();
                     }
                     catch (Exception ex)
                     {

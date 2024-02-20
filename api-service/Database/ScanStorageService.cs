@@ -1,6 +1,7 @@
 ﻿using Core.Abstractions;
 using Core.DTO;
 using Database.Entities;
+using Database.Entities.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -25,7 +26,7 @@ namespace Database
             var existingItem = DbContext.FileSystemItems.Where(x => x.Path == path).SingleOrDefault();
             if (existingItem != null)
             {
-                throw new ApplicationException($"{path} is already in DB");
+                Logger.LogInformation("Scan target '{Path}' is already in the database", path);
             }
 
             var entity = new ScanTarget
@@ -58,7 +59,7 @@ namespace Database
             return await DbContext
                 .ScanTargets
                 .OrderBy(x => x.Id)
-                .Select(x => new ScanTargetDto { Id = x.Id, Path = x.Path, IsScanned = x.IsScanned })
+                .Select(x => x.ToDto())
                 .ToArrayAsync();
         }
 
@@ -71,7 +72,7 @@ namespace Database
 
             if (item != null)
             {
-                return new ScanTargetDto { Id = item.Id, Path = item.Path, IsScanned = item.IsScanned };
+                return item.ToDto();
             }
 
             Logger.LogInformation("Not found next ScanTarget, scanned items ignored {@IgnoreScanned}", ignoreScanned);
@@ -86,7 +87,7 @@ namespace Database
 
             if (item != null)
             {
-                return new ScanTargetDto { Id = item.Id, Path = item.Path, IsScanned = item.IsScanned };
+                return item.ToDto();
             }
 
             Logger.LogInformation("Not found ScanTarget {@Id}, scanned items ignored {@IgnoreScanned}", id, ignoreScanned);
