@@ -2,10 +2,20 @@
 
 <mat-sidenav-container autosize>
     <mat-sidenav opened disableClose class="sidenav" mode="side">
-        <mat-icon fontIcon="library_add"></mat-icon>
+        <mat-icon fontIcon="library_add" (click)="contentDrawer.toggle()"></mat-icon>
     </mat-sidenav>
-    <mat-sidenav-content>
-        <router-outlet></router-outlet>
+    <mat-sidenav-content class="sidenav-content-wrapper">
+        <mat-sidenav-container autosize>
+            <mat-sidenav #contentDrawer class="sidenav-content">
+                <div class="content-wrapper">
+                    <mat-icon fontIcon="west" (click)="contentDrawer.toggle()"></mat-icon>
+                    <glr-scan-manager></glr-scan-manager>
+                </div>
+            </mat-sidenav>
+            <mat-sidenav-content>
+                <router-outlet></router-outlet>
+            </mat-sidenav-content>
+        </mat-sidenav-container>
     </mat-sidenav-content>
 </mat-sidenav-container>
 

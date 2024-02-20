@@ -2,8 +2,34 @@
     padding: 30px;
 }
 
+.sidenav-content-wrapper {
+    container-type: normal;
+}
+
+.sidenav-content {
+    width: 50%;
+    max-width: 600px;
+    min-width: 400px;
+
+    @container (max-width: 1000px) {
+        width: 50%;
+    }
+
+}
+
 mat-icon {
     font-size: 30px;
     width: 30px;
     height: 30px;
+}
+
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+
+    padding: 0 10px;    
+    
+    mat-icon {
+        margin-left: -3px;
+    }
 }

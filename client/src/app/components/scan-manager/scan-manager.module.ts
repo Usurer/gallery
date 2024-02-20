@@ -6,6 +6,7 @@ import { AddScanComponent } from './add-scan/add-scan.component';
 
 @NgModule({
     declarations: [ScanManagerComponent, AddScanComponent],
+    exports: [ScanManagerComponent],
     imports: [CommonModule, HttpClientModule],
 })
 export class ScanManagerModule {}
