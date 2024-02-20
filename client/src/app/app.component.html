@@ -1,12 +1,12 @@
 <!-- <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon> -->
 
 <mat-sidenav-container autosize>
-    <mat-sidenav opened disableClose class="sidenav" mode="side">
+    <mat-sidenav opened disableClose class="menu-sidenav" mode="side">
         <mat-icon fontIcon="library_add" (click)="contentDrawer.toggle()"></mat-icon>
     </mat-sidenav>
-    <mat-sidenav-content class="sidenav-content-wrapper">
+    <mat-sidenav-content class="menu-sidenav-content">
         <mat-sidenav-container autosize>
-            <mat-sidenav #contentDrawer class="sidenav-content">
+            <mat-sidenav #contentDrawer class="content-sidenav">
                 <div class="content-wrapper">
                     <mat-icon fontIcon="west" (click)="contentDrawer.toggle()"></mat-icon>
                     <glr-scan-manager></glr-scan-manager>

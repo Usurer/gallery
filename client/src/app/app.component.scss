@@ -1,12 +1,25 @@
-.sidenav {
+mat-icon {
+    font-size: 30px;
+    width: 30px;
+    height: 30px;
+
+    color: #434343;
+
+    &:hover {
+        color: #252525;
+        cursor: pointer;
+    }
+}
+
+.menu-sidenav {
     padding: 30px;
 }
 
-.sidenav-content-wrapper {
+.menu-sidenav-content {
     container-type: normal;
 }
 
-.sidenav-content {
+.content-sidenav {
     width: 50%;
     max-width: 600px;
     min-width: 400px;
@@ -14,13 +27,6 @@
     @container (max-width: 1000px) {
         width: 50%;
     }
-
-}
-
-mat-icon {
-    font-size: 30px;
-    width: 30px;
-    height: 30px;
 }
 
 .content-wrapper {
