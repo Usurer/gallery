@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ScanManagerStore } from '../scan-manager.store';
 
 @Component({
@@ -8,15 +8,20 @@ import { ScanManagerStore } from '../scan-manager.store';
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [ScanManagerStore],
 })
-export class ScanManagerComponent {
+export class ScanManagerComponent implements OnInit {
     public scans$ = this.store.scans$;
 
-    constructor(private store: ScanManagerStore) {}
+    constructor(private store: ScanManagerStore) {
+        // this.store.addScan.subscribe();
+    }
+    ngOnInit(): void {
+        this.store.getScans();
+    }
 
     public addScan(value: string): void {
-        const data = value.split(';').filter(x => x.length);
-        for(const d of data) {
-            this.store.addScan(d)
+        const data = value.split(';').filter((x) => x.length);
+        for (const d of data) {
+            this.store.addScan(d);
         }
     }
 }

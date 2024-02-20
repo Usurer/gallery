@@ -1,6 +1,6 @@
 <ng-container *ngIf="scans$ | async as scans">
     <div *ngFor="let scan of scans">
-        <div>{{scan}}</div>
+        <div>{{scan.id}} | {{scan.path}} | | {{scan.isScanned}} | {{scan.isInvalid}}</div>
     </div>
 </ng-container>
 
