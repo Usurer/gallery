@@ -6,6 +6,7 @@ export interface EnvironmentConfig {
     foldersApiUri: string;
     scansApiUri: string;
     metaApiUri: string;
+    internalApiUri: string;
 }
 
 export const ENVIRONMENT_CONFIG = new InjectionToken<EnvironmentConfig>('environment-config');

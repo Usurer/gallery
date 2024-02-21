@@ -12,7 +12,16 @@ mat-icon {
 }
 
 .menu-sidenav {
-    padding: 30px;
+    padding: 30px;        
+}
+
+.sidenav-content {
+    display: flex;
+    flex-direction: column;
+
+    mat-icon {
+        padding-bottom: 20px;
+    }
 }
 
 .menu-sidenav-content {
