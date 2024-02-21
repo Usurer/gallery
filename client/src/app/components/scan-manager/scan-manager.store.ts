@@ -61,6 +61,24 @@ export class ScanManagerStore extends ComponentStore<ScanManagerState> {
         );
     });
 
+    readonly deleteScan = this.effect((id$: Observable<number>) => {
+        return id$.pipe(
+            mergeMap((id) => this.httpClient.delete(`${this.settings.environment.scansApiUri}/${id}`)),
+            switchMap(() => {
+                return this.httpClient.get<FolderScan[]>(`${this.settings.environment.scansApiUri}`).pipe(
+                    takeUntil(this.scanAdditionRequest$),
+                    map((scans) => {
+                        return this.setState(() => {
+                            return {
+                                scans: scans,
+                            };
+                        });
+                    })
+                );
+            })
+        );
+    });
+
     readonly addScan = this.effect((path$: Observable<string>) => {
         this.scanAdditionRequest$.next('xxx');
 

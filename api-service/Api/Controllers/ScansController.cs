@@ -35,5 +35,12 @@ namespace Api.Controllers
             var items = await storageService.GetAll();
             return TypedResults.Ok(items);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<Ok> Delete(long id)
+        {
+            await storageService.RemoveFolderFromScansAsync(id);
+            return TypedResults.Ok();
+        }
     }
 }

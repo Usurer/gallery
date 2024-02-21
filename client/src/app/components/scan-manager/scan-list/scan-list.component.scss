@@ -1,21 +1,27 @@
 :host {
     display: grid;
 
-    grid-template-columns: 8fr 1fr 1fr;
+    grid-template-columns: 8fr 1fr 1fr 1fr;
 }
 
 mat-icon {
     color: #434343;
 }
 
-.path {
+.path {}
 
-}
+.is-scanned {}
 
-.is-scanned {
+.is-invalid {}
 
-}
-
-.is-invalid {
-
+.btn-delete {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+        
+    &:hover {
+        border-radius: 3px;
+        color: #3a3a3a;
+        cursor: pointer;
+    }
 }

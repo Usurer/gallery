@@ -24,4 +24,8 @@ export class ScanManagerComponent implements OnInit {
             this.store.addScan(d);
         }
     }
+
+    public onRemoveItem(item: number): void {
+        this.store.deleteScan(item);
+    }
 }

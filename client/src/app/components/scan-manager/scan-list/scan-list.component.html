@@ -1,19 +1,26 @@
 <span>Path</span>
 <span>Scanned</span>
 <span>Invalid</span>
+<span class="placeholder"></span>
 
 <ng-container *ngFor="let item of items">
     <span class="path">{{item.path}}</span>
     
-    <ng-container *ngIf="item.isScanned; else noCheck">
+    <ng-container *ngIf="item.isScanned; else notScanned">
         <mat-icon fontIcon="check_box"></mat-icon>    
     </ng-container>
     
-    <ng-container *ngIf="item.isInvalid; else noCheck">
+    <ng-container *ngIf="item.isInvalid; else notInvalid">
         <mat-icon fontIcon="check_box"></mat-icon>    
+        <mat-icon class="btn-delete" (click)="onRemoveClick(item.id!)">delete_forever</mat-icon>
     </ng-container>
         
-    <ng-template #noCheck>
-        <mat-icon fontIcon="check_box_outline_blank"></mat-icon>    
+    <ng-template #notScanned>
+        <mat-icon fontIcon="check_box_outline_blank"></mat-icon>                    
+    </ng-template>
+    
+    <ng-template #notInvalid>
+        <mat-icon fontIcon="check_box_outline_blank"></mat-icon>
+        <span class="placeholder"></span>
     </ng-template>
 </ng-container>

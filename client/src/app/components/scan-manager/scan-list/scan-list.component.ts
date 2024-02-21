@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 import { FolderScan } from '../scan-manager.store';
 
 @Component({
@@ -11,4 +11,11 @@ import { FolderScan } from '../scan-manager.store';
 export class ScanListComponent {
     @Input()
     public items: FolderScan[] | null = [];
+
+    @Output()
+    removeItem = new EventEmitter<number>();
+
+    public onRemoveClick(id: number): void {
+        this.removeItem.emit(id);
+    }
 }
