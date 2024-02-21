@@ -4,7 +4,7 @@ import { ComponentStore } from '@ngrx/component-store';
 import { EMPTY, Observable, Subject, catchError, map, mergeMap, switchMap, takeUntil, tap } from 'rxjs';
 import { SettingsService } from 'src/app/services/settings.service';
 
-interface FolderScan {
+export interface FolderScan {
     id?: number;
     path: string;
     isScanned?: boolean;

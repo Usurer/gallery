@@ -1,7 +1,4 @@
-<ng-container *ngIf="scans$ | async as scans">
-    <div *ngFor="let scan of scans">
-        <div>{{scan.id}} | {{scan.path}} | | {{scan.isScanned}} | {{scan.isInvalid}}</div>
-    </div>
-</ng-container>
+<glr-scan-list [items]="scans$ | async">
+</glr-scan-list>
 
 <glr-add-scan (addScan)="addScan($event)"></glr-add-scan>

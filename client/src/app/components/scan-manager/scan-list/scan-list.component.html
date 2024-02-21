@@ -1,0 +1,19 @@
+<span>Path</span>
+<span>Scanned</span>
+<span>Invalid</span>
+
+<ng-container *ngFor="let item of items">
+    <span class="path">{{item.path}}</span>
+    
+    <ng-container *ngIf="item.isScanned; else noCheck">
+        <mat-icon fontIcon="check_box"></mat-icon>    
+    </ng-container>
+    
+    <ng-container *ngIf="item.isInvalid; else noCheck">
+        <mat-icon fontIcon="check_box"></mat-icon>    
+    </ng-container>
+        
+    <ng-template #noCheck>
+        <mat-icon fontIcon="check_box_outline_blank"></mat-icon>    
+    </ng-template>
+</ng-container>

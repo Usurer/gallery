@@ -29,13 +29,8 @@ mat-icon {
 }
 
 .content-sidenav {
-    width: 50%;
-    max-width: 600px;
+    width: 70%;
     min-width: 400px;
-
-    @container (max-width: 1000px) {
-        width: 50%;
-    }
 }
 
 .content-wrapper {
