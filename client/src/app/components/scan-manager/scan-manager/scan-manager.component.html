@@ -1,4 +1,8 @@
 <glr-add-scan (addScan)="addScan($event)"></glr-add-scan>
 
-<glr-scan-list [items]="scans$ | async" (removeItem)="onRemoveItem($event)">
+<div>
+    {{prefix$ | async }}
+</div>
+
+<glr-scan-list [items]="scansShortened$ | async" (removeItem)="onRemoveItem($event)">
 </glr-scan-list>

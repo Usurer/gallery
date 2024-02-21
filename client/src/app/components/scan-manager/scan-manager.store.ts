@@ -13,15 +13,17 @@ export interface FolderScan {
 
 interface ScanManagerState {
     scans: FolderScan[];
+    commonPathPrefix: string;
 }
 
 @Injectable()
 export class ScanManagerStore extends ComponentStore<ScanManagerState> {
     constructor(private httpClient: HttpClient, private settings: SettingsService) {
-        super({ scans: [] });
+        super({ scans: [], commonPathPrefix: '' });
     }
 
     readonly scans$ = this.select((x) => x.scans);
+    readonly prefix$ = this.select((x) => x.commonPathPrefix);
 
     readonly scanAdditionRequest$: Subject<string> = new Subject();
 
@@ -52,9 +54,11 @@ export class ScanManagerStore extends ComponentStore<ScanManagerState> {
                 return this.httpClient.get<FolderScan[]>(`${this.settings.environment.scansApiUri}`);
             }),
             tap((scans) => {
+                const prefix = this.getCommonPathPrefix(scans);
                 this.setState(() => {
                     return {
                         scans: scans,
+                        commonPathPrefix: prefix,
                     };
                 });
             })
@@ -68,9 +72,11 @@ export class ScanManagerStore extends ComponentStore<ScanManagerState> {
                 return this.httpClient.get<FolderScan[]>(`${this.settings.environment.scansApiUri}`).pipe(
                     takeUntil(this.scanAdditionRequest$),
                     map((scans) => {
+                        const prefix = this.getCommonPathPrefix(scans);
                         return this.setState(() => {
                             return {
                                 scans: scans,
+                                commonPathPrefix: prefix,
                             };
                         });
                     })
@@ -107,9 +113,11 @@ export class ScanManagerStore extends ComponentStore<ScanManagerState> {
                 return this.httpClient.get<FolderScan[]>(`${this.settings.environment.scansApiUri}`).pipe(
                     takeUntil(this.scanAdditionRequest$),
                     map((scans) => {
+                        const prefix = this.getCommonPathPrefix(scans);
                         return this.setState(() => {
                             return {
                                 scans: scans,
+                                commonPathPrefix: prefix,
                             };
                         });
                     })
@@ -117,6 +125,26 @@ export class ScanManagerStore extends ComponentStore<ScanManagerState> {
             })
         );
     });
+
+    private getCommonPathPrefix(scans: FolderScan[]): string {
+        if (scans.length === 0) return '';
+
+        const firstItem = scans[0].path;
+        let result = '';
+
+        for (let i = 1; i <= firstItem.length; i++) {
+            const substring = firstItem.substring(0, i);
+            for (const scan of scans) {
+                if (scan.path.indexOf(substring) !== 0) {
+                    return result.slice(0, result.lastIndexOf('\\') + 1);
+                }
+            }
+
+            result = substring;
+        }
+
+        return result.slice(0, result.lastIndexOf('\\') + 1);
+    }
 }
 
 // readonly addScan = this.scanAdditionRequest$.pipe(
