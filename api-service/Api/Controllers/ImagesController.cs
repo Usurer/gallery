@@ -29,7 +29,7 @@ namespace Api.Controllers
 
             var mime = MimeUtils.ExtensionToMime(imageData.Info.Extension);
 
-            return TypedResults.File(imageData.Data, mime, imageData.Info.Name);
+            return TypedResults.File(imageData.Data, mime);
         }
 
         [HttpGet("[controller]/{id}/[action]")]
@@ -62,8 +62,7 @@ namespace Api.Controllers
 
             return TypedResults.File(
                 result.Data,
-                contentType: result.MimeType,
-                fileDownloadName: result.Name
+                contentType: result.MimeType
             );
         }
     }
