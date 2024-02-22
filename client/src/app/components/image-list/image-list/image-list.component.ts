@@ -27,6 +27,7 @@ export class ImageListComponent {
     constructor(private settings: SettingsService) {}
 
     // TODO: Transform it to a pure pipe
+    // TODO: Rename timestamp, let it be updatedAtDate as in data model
     getImagePreviewUrl(image: ImageInfo): string {
         const height = 200;
         return (
