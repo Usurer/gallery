@@ -5,6 +5,7 @@ import { FolderExplorerRoutingModule } from './folder-explorer.routing.module';
 import { FoldersListModule } from './folders-list/folders-list.module';
 import { FolderBreadcrumbsModule } from './folder-breadcrumbs/folder-breadcrumbs.module';
 import { ScanManagerRoutingModule } from '../scan-manager/scan-manager.routing.module';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
     declarations: [FolderExplorerComponent],
@@ -15,6 +16,7 @@ import { ScanManagerRoutingModule } from '../scan-manager/scan-manager.routing.m
         FoldersListModule,
         FolderBreadcrumbsModule,
         ScanManagerRoutingModule,
+        CommonModule
     ],
 })
 export class FolderExplorerModule {}

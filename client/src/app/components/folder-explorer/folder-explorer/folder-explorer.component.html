@@ -1,3 +1,3 @@
-<glr-folder-breadcrumbs [rootId]="rootId" (folderSelected)="onFolderSelected($event)"></glr-folder-breadcrumbs>
+<glr-folder-breadcrumbs *ngIf="rootId" [rootId]="rootId" (folderSelected)="onFolderSelected($event)"></glr-folder-breadcrumbs>
 <glr-folders-list-container [rootId]="rootId" (folderSelected)="onFolderSelected($event)"></glr-folders-list-container>
 <glr-image-list-container [rootId]="rootId"></glr-image-list-container>

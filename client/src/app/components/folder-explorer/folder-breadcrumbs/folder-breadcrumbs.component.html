@@ -1,3 +1,4 @@
+<div><a href="/">../</a></div>
 <ng-container *ngIf="items$ | async as items">
     <div *ngFor="let item of items">
         <span (click)="onSelected(item.id)">{{item.name}}</span>
