@@ -55,7 +55,9 @@ namespace Api
                 }, "disk");
             });
 
-            builder.Services.AddScoped<ImageResizeService>();
+            builder.Services.AddScoped<ICacheService, CacheService>();
+            builder.Services.AddScoped<IImageResizeService, ImageResizeService>();
+            builder.Services.AddScoped<IImageProviderService, ImageProviderService>();
 
             //builder.Services.AddHostedService<ScheduledScanService>();
 

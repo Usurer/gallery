@@ -1,26 +1,18 @@
 ﻿using Api.Services;
 using Api.Utils;
-using Core.Abstractions;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Api.Controllers
 {
-    /// <summary>
-    /// List images, get image by ID
-    /// </summary>
     [ApiController]
     public class ImagesController : ControllerBase
     {
-        private readonly IFileSystemService FileSystemService;
+        private readonly IImageProviderService ImageProviderService;
 
-        private readonly ImageResizeService ResizeService;
-
-        public ImagesController(ImageResizeService resizeService, IFileSystemService fileSystemService)
+        public ImagesController(IImageProviderService imageProviderService)
         {
-            ResizeService = resizeService;
-            FileSystemService = fileSystemService;
+            ImageProviderService = imageProviderService;
         }
 
         [HttpGet("[controller]/{id}")]
@@ -28,7 +20,7 @@ namespace Api.Controllers
         public Results<NotFound, FileStreamHttpResult> Get(long id)
         {
             // imageData is disposable because of the Data stream, but FileStreamResult should take care of it
-            var imageData = FileSystemService.GetImage(id);
+            var imageData = ImageProviderService.GetOriginal(id);
 
             if (imageData == null)
             {
@@ -45,7 +37,7 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public async Task<Results<ProblemHttpResult, FileContentHttpResult>> Preview(
-            [BindRequired] long id, int timestamp, int? width, int? height
+            long id, int timestamp, int? width, int? height
         )
         {
             if (width == null && height == null)
@@ -58,7 +50,7 @@ namespace Api.Controllers
                 );
             }
 
-            var result = await ResizeService.GetAsync(id, timestamp, width, height);
+            var result = await ImageProviderService.GetResizedAsync(id, timestamp, width, height);
             if (result == null)
             {
                 return TypedResults.Problem(

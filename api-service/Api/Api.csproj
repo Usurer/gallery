@@ -13,12 +13,16 @@
 
   <ItemGroup>
     <Compile Remove="Attributes\**" />
+    <Compile Remove="logs\**" />
     <Compile Remove="Middleware\**" />
     <Content Remove="Attributes\**" />
+    <Content Remove="logs\**" />
     <Content Remove="Middleware\**" />
     <EmbeddedResource Remove="Attributes\**" />
+    <EmbeddedResource Remove="logs\**" />
     <EmbeddedResource Remove="Middleware\**" />
     <None Remove="Attributes\**" />
+    <None Remove="logs\**" />
     <None Remove="Middleware\**" />
   </ItemGroup>
 
