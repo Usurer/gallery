@@ -1,6 +1,4 @@
-﻿using Core;
-
-namespace Api.Services
+﻿namespace Core.Abstractions
 {
     public interface IImageProviderService
     {

@@ -6,4 +6,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="EasyCaching.Disk" Version="1.9.2" />
+    <PackageReference Include="EasyCaching.InMemory" Version="1.9.2" />
+    <PackageReference Include="EasyCaching.Serialization.MessagePack" Version="1.9.2" />
+    <PackageReference Include="EasyCaching.Serialization.Protobuf" Version="1.9.2" />
+    <PackageReference Include="Imageflow.AllPlatforms" Version="0.10.2" />
+  </ItemGroup>
+
 </Project>

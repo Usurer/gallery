@@ -1,7 +1,6 @@
 using FileSystem;
 using Api.Services;
 using Core;
-using EasyCaching.Disk;
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Json;
@@ -44,20 +43,7 @@ namespace Api
                 });
             });
 
-            builder.Services.AddEasyCaching(options =>
-            {
-                options.WithMessagePack("disk");
-                options.UseInMemory("in-memory");
-
-                options.UseDisk(config =>
-                {
-                    config.DBConfig = new DiskDbOptions { BasePath = "C:\\Coding\\Meaningful Projects\\Gallery\\_cache" };
-                }, "disk");
-            });
-
-            builder.Services.AddScoped<ICacheService, CacheService>();
-            builder.Services.AddScoped<IImageResizeService, ImageResizeService>();
-            builder.Services.AddScoped<IImageProviderService, ImageProviderService>();
+            builder.Services.AddCoreServices();
 
             //builder.Services.AddHostedService<ScheduledScanService>();
 

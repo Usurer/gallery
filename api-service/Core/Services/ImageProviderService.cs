@@ -1,9 +1,9 @@
-﻿using Core;
-using Core.Abstractions;
+﻿using Core.Abstractions;
+using Microsoft.Extensions.Logging;
 
-namespace Api.Services
+namespace Core.Services
 {
-    public class ImageProviderService : IImageProviderService
+    internal class ImageProviderService : IImageProviderService
     {
         private readonly IImageResizeService ImageResizeService;
         private readonly ICacheService CacheService;
@@ -22,7 +22,7 @@ namespace Api.Services
         {
             var cacheKey = $"{id}_{updatedAtDate}_{width}_{height}";
 
-            var cacheFound = CacheService.TryGet<ImageResizeResult>(cacheKey, out ImageResizeResult cacheValue);
+            var cacheFound = CacheService.TryGet(cacheKey, out ImageResizeResult cacheValue);
             if (!cacheFound)
             {
                 using var imageData = FileSystemService.GetImage(id);
@@ -36,7 +36,7 @@ namespace Api.Services
 
                 try
                 {
-                    await CacheService.SetAsync<ImageResizeResult>(cacheKey, result);
+                    await CacheService.SetAsync(cacheKey, result);
                 }
                 catch (DirectoryNotFoundException ex)
                 {

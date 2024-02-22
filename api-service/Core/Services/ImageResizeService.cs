@@ -1,15 +1,15 @@
-﻿using Api.Utils;
-using Core;
+﻿using Core.Abstractions;
+using Core.Utils;
 using Imageflow.Fluent;
+using Microsoft.Extensions.Logging;
 
-namespace Api.Services
+namespace Core.Services
 {
-    public class ImageResizeService : IImageResizeService
+    internal class ImageResizeService : IImageResizeService
     {
         private readonly ILogger<ImageResizeService> Logger;
 
-        public ImageResizeService(
-            ILogger<ImageResizeService> logger)
+        public ImageResizeService(ILogger<ImageResizeService> logger)
         {
             Logger = logger;
         }

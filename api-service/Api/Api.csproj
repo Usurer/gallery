@@ -27,11 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="EasyCaching.Disk" Version="1.9.3-alpha20231127013454" />
-    <PackageReference Include="EasyCaching.InMemory" Version="1.9.2" />
-    <PackageReference Include="EasyCaching.Serialization.MessagePack" Version="1.9.2" />
-    <PackageReference Include="EasyCaching.Serialization.Protobuf" Version="1.9.3-alpha20231127013454" />
-    <PackageReference Include="Imageflow.AllPlatforms" Version="0.10.2" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.10">
@@ -51,6 +46,10 @@
     <ProjectReference Include="..\Core\Core.csproj" />
     <ProjectReference Include="..\Database\Database.csproj" />
     <ProjectReference Include="..\FileSystem\FileSystem.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Utils\" />
   </ItemGroup>
 
 </Project>

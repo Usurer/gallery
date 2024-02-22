@@ -1,8 +1,6 @@
-﻿using Core;
-
-namespace Api.Services
+﻿namespace Core.Abstractions
 {
-    public interface IImageResizeService
+    internal interface IImageResizeService
     {
         Task<ImageResizeResult> GetAsync(FileItemData imageData, int? width, int? height);
     }

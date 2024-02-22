@@ -1,8 +1,10 @@
-﻿using EasyCaching.Core;
+﻿using Core.Abstractions;
+using EasyCaching.Core;
+using Microsoft.Extensions.Logging;
 
-namespace Api.Services
+namespace Core.Services
 {
-    public class CacheService : ICacheService
+    internal class CacheService : ICacheService
     {
         private readonly IEasyCachingProvider EasyCachingProvider;
         private readonly ILogger<CacheService> Logger;

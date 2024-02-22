@@ -1,6 +1,6 @@
-﻿namespace Api.Services
+﻿namespace Core.Abstractions
 {
-    public interface ICacheService
+    internal interface ICacheService
     {
         Task<bool> SetAsync<T>(string key, T value);
 

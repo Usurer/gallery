@@ -1,4 +1,4 @@
-﻿namespace Api.Utils
+﻿namespace Core.Utils
 {
     public static class MimeUtils
     {
