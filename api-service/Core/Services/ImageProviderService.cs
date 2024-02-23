@@ -1,18 +1,27 @@
 ﻿using Core.Abstractions;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Core.Services
 {
     internal class ImageProviderService : IImageProviderService
     {
-        private readonly IImageResizeService ImageResizeService;
+        private readonly IImageResizeService FlowResizeService;
+        private readonly IImageResizeService MagickResizeService;
         private readonly ICacheService CacheService;
         private readonly IFileSystemService FileSystemService;
         private readonly ILogger<ImageProviderService> Logger;
 
-        public ImageProviderService(IImageResizeService imageResizeService, ICacheService cacheService, IFileSystemService fileSystemService, ILogger<ImageProviderService> logger)
+        public ImageProviderService(
+            [FromKeyedServices(ServiceRegistrationExtensions.FlowResizeServiceKey)] IImageResizeService flowResizeService,
+            [FromKeyedServices(ServiceRegistrationExtensions.MagickResizeServiceKey)] IImageResizeService magickResizeService,
+            ICacheService cacheService,
+            IFileSystemService fileSystemService,
+            ILogger<ImageProviderService> logger
+        )
         {
-            ImageResizeService = imageResizeService;
+            FlowResizeService = flowResizeService;
+            MagickResizeService = magickResizeService;
             CacheService = cacheService;
             FileSystemService = fileSystemService;
             Logger = logger;
@@ -32,7 +41,12 @@ namespace Core.Services
                     return null;
                 }
 
-                var result = await ImageResizeService.GetAsync(imageData, width, height);
+                var useMagick = string.Compare(imageData.Info.Extension, ".cr2", StringComparison.OrdinalIgnoreCase) == 0
+                    || string.Compare(imageData.Info.Extension, ".arw", StringComparison.OrdinalIgnoreCase) == 0;
+
+                var result = useMagick
+                    ? await MagickResizeService.GetAsync(imageData, width, height)
+                    : await FlowResizeService.GetAsync(imageData, width, height);
 
                 try
                 {

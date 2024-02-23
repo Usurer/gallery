@@ -7,6 +7,9 @@ namespace Core
 {
     public static class ServiceRegistrationExtensions
     {
+        public const string MagickResizeServiceKey = "magick";
+        public const string FlowResizeServiceKey = "flow";
+
         public static void AddCoreServices(this IServiceCollection services)
         {
             services.AddEasyCaching(options =>
@@ -23,7 +26,8 @@ namespace Core
             });
 
             services.AddScoped<ICacheService, CacheService>();
-            services.AddScoped<IImageResizeService, ImageResizeService>();
+            services.AddKeyedScoped<IImageResizeService, ImagemagicResizeService>(MagickResizeServiceKey);
+            services.AddKeyedScoped<IImageResizeService, ImageflowResizeService>(FlowResizeServiceKey);
             services.AddScoped<IImageProviderService, ImageProviderService>();
         }
     }

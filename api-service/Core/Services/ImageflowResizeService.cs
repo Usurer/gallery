@@ -5,11 +5,11 @@ using Microsoft.Extensions.Logging;
 
 namespace Core.Services
 {
-    internal class ImageResizeService : IImageResizeService
+    internal class ImageflowResizeService : IImageResizeService
     {
-        private readonly ILogger<ImageResizeService> Logger;
+        private readonly ILogger<ImageflowResizeService> Logger;
 
-        public ImageResizeService(ILogger<ImageResizeService> logger)
+        public ImageflowResizeService(ILogger<ImageflowResizeService> logger)
         {
             Logger = logger;
         }

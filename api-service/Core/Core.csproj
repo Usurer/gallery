@@ -12,6 +12,8 @@
     <PackageReference Include="EasyCaching.Serialization.MessagePack" Version="1.9.2" />
     <PackageReference Include="EasyCaching.Serialization.Protobuf" Version="1.9.2" />
     <PackageReference Include="Imageflow.AllPlatforms" Version="0.10.2" />
+    <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="13.6.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
   </ItemGroup>
 
 </Project>

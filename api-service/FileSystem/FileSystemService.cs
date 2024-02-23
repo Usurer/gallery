@@ -2,8 +2,7 @@
 using Core.Abstractions;
 using Core.DTO;
 using Core.Utils;
-using Imageflow.Bindings;
-using Imageflow.Fluent;
+using ImageMagick;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -99,27 +98,37 @@ namespace FileSystem
                         if (!existsInDb)
                         {
                             // TODO: Extract all image processing into a namespace under a Core namespace
-                            ImageInfo? imageInfo = null;
+                            using var magickImage = new MagickImage();
+
                             if (!isDirectory)
                             {
                                 using var imageData = File.OpenRead(fileSystemInfo.FullName);
                                 try
                                 {
-                                    imageInfo = await ImageJob.GetImageInfo(new StreamSource(imageData, false));
+                                    magickImage.Ping(fileSystemInfo.FullName);
+                                    var newItem = fileSystemInfo.ToFileSystemItemDto(
+                                        rootDbRecord.Id,
+                                        magickImage.Width,
+                                        magickImage.Height
+                                    );
+
+                                    newItems.Add(newItem);
                                 }
                                 catch (Exception ex)
                                 {
                                     Logger.LogError(ex, "Error while getting Image Info for {FileName}", fileSystemInfo.FullName);
                                 }
                             }
+                            else
+                            {
+                                var newItem = fileSystemInfo.ToFileSystemItemDto(
+                                        rootDbRecord.Id,
+                                        null,
+                                        null
+                                    );
 
-                            var newItem = fileSystemInfo.ToFileSystemItemDto(
-                                rootDbRecord.Id,
-                                imageInfo != null ? (int)imageInfo.ImageWidth : null,
-                                imageInfo != null ? (int)imageInfo.ImageHeight : null
-                            );
-
-                            newItems.Add(newItem);
+                                newItems.Add(newItem);
+                            }
 
                             // Yeah, these are not saved yet, but okay
                             result.Saved++;
