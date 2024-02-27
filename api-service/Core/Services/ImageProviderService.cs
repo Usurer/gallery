@@ -65,9 +65,21 @@ namespace Core.Services
             return cacheValue;
         }
 
-        public FileItemData? GetOriginal(long id)
+        public async Task<ImageResizeResult?> GetOriginalAsync(long id)
         {
-            return FileSystemService.GetImage(id);
+            using var imageData = FileSystemService.GetImage(id);
+
+            if (imageData == null)
+            {
+                return null;
+            }
+
+            var useMagick = string.Compare(imageData.Info.Extension, ".cr2", StringComparison.OrdinalIgnoreCase) == 0
+                || string.Compare(imageData.Info.Extension, ".arw", StringComparison.OrdinalIgnoreCase) == 0;
+
+            return useMagick
+                ? await MagickResizeService.GetAsync(imageData, null, null)
+                : await FlowResizeService.GetAsync(imageData, null, null);
         }
     }
 }

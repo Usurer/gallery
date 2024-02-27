@@ -45,13 +45,20 @@ namespace Core.Services
             if (thumbnailData != null)
             {
                 using var thumbnail = new MagickImage(thumbnailData);
-                thumbnail.Resize(geometry);
+                if (width != null || height != null)
+                {
+                    thumbnail.Resize(geometry);
+                }
+
                 await imageFromFile.WriteAsync(resizedStream, MagickFormat.Jpg);
                 data = resizedStream.ToArray();
             }
             else
             {
-                imageFromFile.Resize(geometry);
+                if (width != null || height != null)
+                {
+                    imageFromFile.Resize(geometry);
+                }
                 await imageFromFile.WriteAsync(resizedStream, MagickFormat.Jpg);
                 data = resizedStream.ToArray();
             }

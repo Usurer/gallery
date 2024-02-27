@@ -17,19 +17,17 @@ namespace Api.Controllers
 
         [HttpGet("[controller]/{id}")]
         [ResponseCache(Duration = 60)]
-        public Results<NotFound, FileStreamHttpResult> Get(long id)
+        public async Task<Results<NotFound, FileContentHttpResult>> Get(long id)
         {
             // imageData is disposable because of the Data stream, but FileStreamResult should take care of it
-            var imageData = ImageProviderService.GetOriginal(id);
+            var imageData = await ImageProviderService.GetOriginalAsync(id);
 
             if (imageData == null)
             {
                 return TypedResults.NotFound();
             }
 
-            var mime = MimeUtils.ExtensionToMime(imageData.Info.Extension);
-
-            return TypedResults.File(imageData.Data, mime);
+            return TypedResults.File(imageData.Data, imageData.MimeType);
         }
 
         [HttpGet("[controller]/{id}/[action]")]

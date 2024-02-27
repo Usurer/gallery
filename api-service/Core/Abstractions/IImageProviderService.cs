@@ -4,6 +4,6 @@
     {
         Task<ImageResizeResult?> GetResizedAsync(long id, int updatedAtDate, int? width, int? height);
 
-        FileItemData? GetOriginal(long id);
+        Task<ImageResizeResult?> GetOriginalAsync(long id);
     }
 }
