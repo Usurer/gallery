@@ -1,28 +1,38 @@
-import type { Meta, StoryObj } from '@storybook/angular';
+import { moduleMetadata, type Meta, type StoryObj } from '@storybook/angular';
 import { FolderBreadcrumbsComponent } from './folder-breadcrumbs.component';
 
-import { within } from '@storybook/testing-library';
-import { expect } from '@storybook/jest';
+import { FolderHierarchyStore } from './folder-hierarchy.store';
+import { of } from 'rxjs';
+import { FolderInfo } from 'src/app/dto/folder-info';
 
 const meta: Meta<FolderBreadcrumbsComponent> = {
     component: FolderBreadcrumbsComponent,
     title: 'FolderBreadcrumbsComponent',
+    decorators: [
+        moduleMetadata({
+            providers: [
+                {
+                    provide: FolderHierarchyStore,
+                    useValue: {
+                        select: () => of<FolderInfo[]>([{ id: 1, name: 'test', updatedAtDate: 0 }]),
+                        fetchHierarcy: (): void => undefined,
+                    },
+                },
+            ],
+        }),
+    ],
 };
+
 export default meta;
+
 type Story = StoryObj<FolderBreadcrumbsComponent>;
 
-export const Primary: Story = {
+const Base: Story = {
     args: {
         rootId: 0,
     },
 };
 
-export const Heading: Story = {
-    args: {
-        rootId: 0,
-    },
-    play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        expect(canvas.getByText(/folder-breadcrumbs works!/gi)).toBeTruthy();
-    },
+export const Primary: Story = {
+    ...Base,
 };
