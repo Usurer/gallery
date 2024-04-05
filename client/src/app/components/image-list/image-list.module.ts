@@ -7,17 +7,13 @@ import { ImagePopupModule } from '../image-popup/image-popup.module';
 import { MatIconModule } from '@angular/material/icon';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { ImageListContainerComponent } from './image-list-container/image-list-container.component';
+import { ClickNotificationService } from 'src/app/services/click-notification.service';
+import { ImageListStore } from './image-list.store';
 
 @NgModule({
     declarations: [ImageListComponent, ImageListContainerComponent],
-    imports: [
-        CommonModule,
-        BrowserModule,
-        RouterModule,
-        ImagePopupModule,
-        MatIconModule,
-        ScrollingModule,
-    ],
+    imports: [CommonModule, BrowserModule, RouterModule, ImagePopupModule, MatIconModule, ScrollingModule],
     exports: [ImageListContainerComponent],
+    providers: [ClickNotificationService, ImageListStore],
 })
 export class ImageListModule {}

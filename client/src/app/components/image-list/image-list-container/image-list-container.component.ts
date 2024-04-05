@@ -7,8 +7,6 @@ import {
     NgZone,
     OnChanges,
     OnDestroy,
-    OnInit,
-    SimpleChanges,
     ViewContainerRef,
     ViewEncapsulation,
 } from '@angular/core';
@@ -24,7 +22,6 @@ import { RowInfo } from '../row-info';
     styleUrls: ['./image-list-container.component.scss'],
     encapsulation: ViewEncapsulation.Emulated,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [ClickNotificationService, ImageListStore],
 })
 export class ImageListContainerComponent implements OnDestroy, AfterViewInit, OnChanges {
     private topPosition$ = new BehaviorSubject<number>(0);
