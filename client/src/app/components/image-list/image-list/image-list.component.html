@@ -5,8 +5,8 @@
         <img 
           *ngIf="rowInfo.visible" 
           @myInsertRemoveTrigger 
-          src="{{getImagePreviewUrl(image)}}" 
-          alt="">
+          src="{{image.id | imagePreviewUrl:200:image.updatedAtDate }}" 
+          alt="{{image.name}}">
       </a>
     </div>
   </div>

@@ -9,10 +9,11 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { ImageListContainerComponent } from './image-list-container/image-list-container.component';
 import { ClickNotificationService } from 'src/app/services/click-notification.service';
 import { ImageListStore } from './image-list.store';
+import { PipesModule } from 'src/app/pipes/pipes.module';
 
 @NgModule({
     declarations: [ImageListComponent, ImageListContainerComponent],
-    imports: [CommonModule, BrowserModule, RouterModule, ImagePopupModule, MatIconModule, ScrollingModule],
+    imports: [CommonModule, BrowserModule, RouterModule, ImagePopupModule, MatIconModule, ScrollingModule, PipesModule],
     exports: [ImageListContainerComponent],
     providers: [ClickNotificationService, ImageListStore],
 })
