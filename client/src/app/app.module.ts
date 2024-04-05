@@ -17,7 +17,7 @@ import { ScanManagerModule } from './components/scan-manager/scan-manager.module
 import { MatSidenavModule } from '@angular/material/sidenav';
 
 @NgModule({
-    declarations: [PlaceholderComponent, AppComponent],
+    declarations: [AppComponent],
     imports: [
         CommonModule,
         BrowserModule,
