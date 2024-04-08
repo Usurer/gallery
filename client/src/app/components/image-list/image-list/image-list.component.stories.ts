@@ -15,7 +15,7 @@ const rows: RowInfo[] = [
     },
 ];
 
-@Pipe({name: 'imagePreviewUrl'})
+@Pipe({ name: 'imagePreviewUrl' })
 class MockPipe implements PipeTransform {
     transform(value: number): string {
         //Do stuff here, if you want

@@ -1,7 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { ImageListStore } from '../image-list/image-list.store';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { Observable, map, tap } from 'rxjs';
+import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
 
 @Component({
     selector: 'glr-image',
@@ -11,19 +8,8 @@ import { Observable, map, tap } from 'rxjs';
     encapsulation: ViewEncapsulation.Emulated,
 })
 export class ImageComponent {
-    constructor(private route: ActivatedRoute, private router: Router) {}
-    private _id!: string; // TODO: Should it be nullable?
-    public query: string | undefined;
-
     @Input()
-    get id(): string | undefined {
-        return this._id;
-    }
-
-    set id(value: string) {
-        this._id = value;
-        this.query = `http://localhost:5279/Images/${value}`;
-    }
+    id: string | undefined;
 
     @Input()
     width: number | undefined;
