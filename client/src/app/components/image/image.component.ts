@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@a
 })
 export class ImageComponent {
     @Input()
-    id: string | undefined;
+    id: number | undefined;
 
     @Input()
     width: number | undefined;

@@ -32,7 +32,7 @@ export class ImagePopupComponent {
         private route: ActivatedRoute,
         private clickNotification: ClickNotificationService,
         private http: HttpClient,
-        private settings: SettingsService
+        settings: SettingsService
     ) {
         this.itemInfo$ = this.route.paramMap.pipe(
             switchMap((x: ParamMap) => {

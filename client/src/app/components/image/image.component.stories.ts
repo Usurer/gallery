@@ -27,7 +27,7 @@ type Story = StoryObj<ImageComponent>;
 
 export const Primary: Story = {
     args: {
-        id: 'birdie',
+        id: 1,
     },
 };
 

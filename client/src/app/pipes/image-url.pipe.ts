@@ -8,7 +8,7 @@ import { SettingsService } from '../services/settings.service';
 export class ImageUrlPipe implements PipeTransform {
     constructor(private settings: SettingsService) {}
 
-    transform(id: string) {
+    transform(id: number): string {
         return `${this.settings.environment.imagesApiUri}/${id}`;
     }
 }
