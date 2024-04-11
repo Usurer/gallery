@@ -3,8 +3,8 @@
 <span>Invalid</span>
 <span class="placeholder"></span>
 
-<ng-container *ngFor="let item of items">
-    <span class="path">{{item.path}}</span>
+<ng-container *ngFor="let item of items; trackBy: trackById">
+    <span class="path" data-testid="item-path">{{item.path}}</span>
     
     <ng-container *ngIf="item.isScanned; else notScanned">
         <mat-icon fontIcon="check_box"></mat-icon>    
@@ -12,7 +12,7 @@
     
     <ng-container *ngIf="item.isInvalid; else notInvalid">
         <mat-icon fontIcon="check_box"></mat-icon>    
-        <mat-icon class="btn-delete" (click)="onRemoveClick(item.id!)">delete_forever</mat-icon>
+        <mat-icon class="btn-delete" (click)="onRemoveClick(item.id!)" data-testid="btn-delete">delete_forever</mat-icon>
     </ng-container>
         
     <ng-template #notScanned>

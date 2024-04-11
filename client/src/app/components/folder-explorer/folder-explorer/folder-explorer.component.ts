@@ -14,7 +14,6 @@ export class FolderExplorerComponent {
     constructor(private router: Router) {}
 
     onFolderSelected(folderId: number): void {
-        console.log(`select ${folderId}`);
         if (folderId !== this.rootId) {
             this.router.navigate([`/${FOLDER_ROUTE}`, folderId]);
         }

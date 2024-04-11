@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ImageListModule } from './components/image-list/image-list.module';
-import { PlaceholderComponent } from './components/placeholder/placeholder.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CommonModule } from '@angular/common';
@@ -17,7 +16,7 @@ import { ScanManagerModule } from './components/scan-manager/scan-manager.module
 import { MatSidenavModule } from '@angular/material/sidenav';
 
 @NgModule({
-    declarations: [PlaceholderComponent, AppComponent],
+    declarations: [AppComponent],
     imports: [
         CommonModule,
         BrowserModule,

@@ -8,7 +8,6 @@ import { animate, style, transition, trigger } from '@angular/animations';
     selector: 'glr-folders-list-container',
     templateUrl: './folders-list.container.component.html',
     styleUrls: ['./folders-list.container.component.scss'],
-    providers: [FoldersListStore],
     animations: [
         trigger('myInsertRemoveTrigger', [
             transition(':enter', [style({ opacity: 0 }), animate('300ms', style({ opacity: 1 }))]),

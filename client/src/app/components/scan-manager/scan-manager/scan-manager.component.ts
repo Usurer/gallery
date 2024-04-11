@@ -1,13 +1,12 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ScanManagerStore } from '../scan-manager.store';
-import { map, mergeMap, withLatestFrom } from 'rxjs';
+import { map, withLatestFrom } from 'rxjs';
 
 @Component({
     selector: 'glr-scan-manager',
     templateUrl: './scan-manager.component.html',
     styleUrls: ['./scan-manager.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [ScanManagerStore],
 })
 export class ScanManagerComponent implements OnInit {
     public scans$ = this.store.scans$;
@@ -25,9 +24,8 @@ export class ScanManagerComponent implements OnInit {
         })
     );
 
-    constructor(private store: ScanManagerStore) {
-        // this.store.addScan.subscribe();
-    }
+    constructor(private store: ScanManagerStore) {}
+
     ngOnInit(): void {
         this.store.getScans();
     }

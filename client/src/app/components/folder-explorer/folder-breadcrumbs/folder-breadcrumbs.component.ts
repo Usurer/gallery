@@ -6,7 +6,6 @@ import { map } from 'rxjs';
     selector: 'glr-folder-breadcrumbs',
     templateUrl: './folder-breadcrumbs.component.html',
     styleUrls: ['./folder-breadcrumbs.component.scss'],
-    providers: [FolderHierarchyStore],
 })
 export class FolderBreadcrumbsComponent implements OnChanges {
     @Input()
