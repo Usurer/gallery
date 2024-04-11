@@ -18,4 +18,8 @@ export class ScanListComponent {
     public onRemoveClick(id: number): void {
         this.removeItem.emit(id);
     }
+
+    public trackById(idx: number, item: FolderScan) {
+        return item.id;
+    }
 }

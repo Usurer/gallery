@@ -1,10 +1,10 @@
 import { moduleMetadata, type Meta, type StoryObj } from '@storybook/angular';
 import { ScanManagerComponent } from './scan-manager.component';
 
-import { within } from '@storybook/testing-library';
+import { userEvent, within } from '@storybook/testing-library';
 import { expect } from '@storybook/jest';
 import { FolderScan, ScanManagerStore } from '../scan-manager.store';
-import { BehaviorSubject, EMPTY, Observable, of } from 'rxjs';
+import { BehaviorSubject,of } from 'rxjs';
 import { ScanListComponent } from '../scan-list/scan-list.component';
 import { AddScanComponent } from '../add-scan/add-scan.component';
 
@@ -27,7 +27,9 @@ const mockNeither: FolderScan = {
     path: 'Test 3',
 };
 
-let scansMocks = [mockScanned, mockInvalid, mockNeither];
+let maxId = 3;
+
+const scansMocks = [mockScanned, mockInvalid, mockNeither];
 
 const scansMocksSubject = new BehaviorSubject<FolderScan[]>(scansMocks);
 
@@ -37,15 +39,14 @@ const mockStore = {
     getScans: () => scansMocksSubject.asObservable(),
     addScan: (path: string) => {
         const newScan: FolderScan = {
-            id: Math.max(...scansMocks.map((x) => x.id || 0)) + 1,
+            id: ++maxId,
             path: path,
         };
-        scansMocks.push(newScan);
-        scansMocksSubject.next(scansMocks);
+        scansMocksSubject.next([...scansMocks, newScan]);
     },
     deleteScan: (id: number) => {
-        scansMocks = scansMocks.filter((x) => x.id !== id);
-        scansMocksSubject.next(scansMocks);
+        const currentVal = scansMocksSubject.value;
+        scansMocksSubject.next(currentVal.filter((x) => x.id !== id));
     },
 };
 
@@ -72,10 +73,33 @@ export const Primary: Story = {
     args: {},
 };
 
-export const Heading: Story = {
+export const AddNewItem: Story = {
     args: {},
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
-        expect(canvas.getByText(/scan-manager works!/gi)).toBeTruthy();
+        const inputField = canvas.getByTestId('input-file');
+        const submitBtn = canvas.getByTestId('btn-submit');
+
+        expect(canvas.getAllByTestId('item-path').find((x) => x.innerText === 'Test 4')).toBeFalsy();
+
+        await userEvent.type(inputField, 'Test 4');
+        await userEvent.click(submitBtn);
+
+        expect(canvas.getAllByTestId('item-path').find((x) => x.innerText === 'Test 4')).toBeTruthy();
+    },
+};
+
+export const RemoveInvalidItem: Story = {
+    args: {},
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+
+        const initialCount = canvas.getAllByTestId('item-path').length;
+
+        const deleteButton = canvas.getByTestId('btn-delete');
+        await userEvent.click(deleteButton);
+
+        const count = canvas.getAllByTestId('item-path').length;
+        expect(count).toEqual(initialCount - 1);
     },
 };
