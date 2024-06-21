@@ -11,7 +11,6 @@ public class FileSystemItem
         get; set;
     }
 
-    // TODO: Should be a secondary keyy, ref to Id
     public long? ParentId
     {
         get; set;

@@ -35,6 +35,12 @@ internal class GalleryContext : DbContext, IGalleryContext
 
             entity.Property(e => e.Id).HasColumnType("INTEGER").IsRequired();
             entity.Property(e => e.ParentId).HasColumnType("INTEGER");
+
+            entity
+                .HasOne<FileSystemItem>()
+                .WithMany()
+                .HasForeignKey(e => e.ParentId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
         modelBuilder.Entity<Image>(entity =>
