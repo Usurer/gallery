@@ -29,7 +29,7 @@ namespace Database.Migrations
                         column: x => x.FileSystemItemId,
                         principalTable: "FileSystemItems",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
