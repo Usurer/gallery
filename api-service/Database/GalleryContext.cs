@@ -54,6 +54,7 @@ internal class GalleryContext : DbContext, IGalleryContext
                 .HasOne(e => e.FileSystemItem)
                 .WithOne()
                 .HasForeignKey<Image>(e => e.FileSystemItemId)
+                .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
         });
 
