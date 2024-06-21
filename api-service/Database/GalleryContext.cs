@@ -22,6 +22,11 @@ internal class GalleryContext : DbContext, IGalleryContext
         get; set;
     }
 
+    public virtual DbSet<Image> Images
+    {
+        get; set;
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<FileSystemItem>(entity =>
@@ -30,11 +35,20 @@ internal class GalleryContext : DbContext, IGalleryContext
 
             entity.Property(e => e.Id).HasColumnType("INTEGER").IsRequired();
             entity.Property(e => e.ParentId).HasColumnType("INTEGER");
-            entity.Property(e => e.IsFolder);
-            entity.Property(e => e.Path);
-            entity.Property(e => e.Name);
-            entity.Property(e => e.CreationDate);
-            entity.Property(e => e.Extension);
+        });
+
+        modelBuilder.Entity<Image>(entity =>
+        {
+            entity.ToTable(nameof(Images));
+
+            entity.Property(e => e.Id).HasColumnType("INTEGER").IsRequired();
+            entity.Property(e => e.FileSystemItemId).HasColumnType("INTEGER");
+
+            entity
+                .HasOne(e => e.FileSystemItem)
+                .WithOne()
+                .HasForeignKey<Image>(e => e.FileSystemItemId)
+                .IsRequired();
         });
 
         modelBuilder.Entity<ScanTarget>(entity =>
