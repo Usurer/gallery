@@ -1,9 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Database.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Database;
 
-// Just alternative to [Key] attribute
-[PrimaryKey(nameof(Id))]
 public class FileSystemItem
 {
     public long Id
@@ -54,6 +53,16 @@ public class FileSystemItem
     }
 
     public long UpdatedAtDate
+    {
+        get; set;
+    }
+
+    public FileSystemItem? Parent
+    {
+        get; set;
+    }
+
+    public Image? Image
     {
         get; set;
     }

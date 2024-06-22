@@ -7,22 +7,22 @@
             get; set;
         }
 
-        public FileSystemItem FileSystemItem
+        public required FileSystemItem FileSystemItem
         {
             get; set;
         }
 
-        public string? Extension
+        public required string Extension
         {
             get; set;
         }
 
-        public int? Width
+        public int Width
         {
             get; set;
         }
 
-        public int? Height
+        public int Height
         {
             get; set;
         }

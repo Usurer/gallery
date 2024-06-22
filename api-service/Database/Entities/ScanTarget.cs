@@ -4,8 +4,6 @@ namespace Database.Entities
 {
     public class ScanTarget
     {
-        // Id is PK by default convention, but I'll keep the attr
-        [Key]
         public long Id
         {
             get; set;

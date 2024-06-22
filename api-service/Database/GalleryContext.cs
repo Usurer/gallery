@@ -34,12 +34,11 @@ internal class GalleryContext : DbContext, IGalleryContext
             entity.ToTable("FileSystemItems");
 
             entity.Property(e => e.Id).HasColumnType("INTEGER").IsRequired();
-            entity.Property(e => e.ParentId).HasColumnType("INTEGER");
 
             entity.HasKey(e => e.Id);
 
             entity
-                .HasOne<FileSystemItem>()
+                .HasOne(e => e.Parent)
                 .WithMany()
                 .HasForeignKey(e => e.ParentId)
                 .OnDelete(DeleteBehavior.Restrict);
@@ -53,7 +52,7 @@ internal class GalleryContext : DbContext, IGalleryContext
 
             entity
                 .HasOne(e => e.FileSystemItem)
-                .WithOne()
+                .WithOne(e => e.Image)
                 .HasForeignKey<Image>(e => e.FileSystemItemId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
@@ -64,6 +63,8 @@ internal class GalleryContext : DbContext, IGalleryContext
             entity.ToTable(nameof(ScanTargets));
 
             entity.Property(e => e.Id).HasColumnType("INTEGER").IsRequired();
+            entity.HasKey(e => e.Id);
+
             entity.Property(e => e.Path);
         });
 
