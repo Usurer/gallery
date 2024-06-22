@@ -67,6 +67,7 @@ namespace Database
             // TODO: Should we check whether the folder itself exist?
             items = items
                 .Where(x => !x.IsFolder)
+                .Include(x => x.Image)
                 .OrderBy(x => x.ParentId)
                 .ThenBy(x => x.CreationDate)
                 .Skip(skip)
@@ -134,6 +135,7 @@ namespace Database
                 return null;
             }
 
+            // TODO: We can just take currentFolder.Parent
             var parent = DbContext
                 .FileSystemItems
                 .SingleOrDefault(x => x.Id == currentFolder.ParentId && x.IsFolder);

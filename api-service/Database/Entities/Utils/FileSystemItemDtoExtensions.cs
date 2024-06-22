@@ -6,19 +6,31 @@ namespace Database.Entities.Utils
     {
         public static FileSystemItem ToEntity(this FileSystemItemDto item)
         {
-            return new FileSystemItem
+            var fileSystemItem = new FileSystemItem
             {
                 Id = item.Id,
                 Name = item.Name,
                 CreationDate = item.CreationDate,
-                Extension = item.Extension,
-                Height = item.Height,
                 IsFolder = item.IsFolder,
                 ParentId = item.ParentId,
                 Path = item.Path,
                 UpdatedAtDate = item.UpdatedAtDate,
-                Width = item.Width,
             };
+
+            if (!item.IsFolder)
+            {
+                var image = new Image
+                {
+                    Width = item.Width ?? 0, // TODO: Refactor these
+                    Height = item.Height ?? 0,
+                    Extension = item.Extension ?? string.Empty,
+                    FileSystemItem = fileSystemItem
+                };
+
+                fileSystemItem.Image = image;
+            }
+
+            return fileSystemItem;
         }
     }
 }
