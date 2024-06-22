@@ -39,6 +39,16 @@ namespace Database.Migrations
                 oldClrType: typeof(string),
                 oldType: "TEXT",
                 oldNullable: true);
+
+            migrationBuilder.Sql(@"
+                INSERT INTO Images(FileSystemItemId, Height, Width, Extension)
+                SELECT Id, Height, Width, Extension
+                FROM FileSystemItems
+                WHERE IsFolder = 0
+                    AND Height IS NOT NULL
+                    AND Width IS NOT NULL
+                    AND Extension IS NOT NULL
+            ");
         }
 
         /// <inheritdoc />
