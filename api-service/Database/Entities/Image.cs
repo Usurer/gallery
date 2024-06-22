@@ -1,20 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Database.Entities
+﻿namespace Database.Entities
 {
     public class Image
     {
-        public long Id
-        {
-            get; set;
-        }
-
-        // TODO: Should be a secondary key, ref to Id
-        public long? FileSystemItemId
+        public long FileSystemItemId
         {
             get; set;
         }

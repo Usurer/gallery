@@ -36,6 +36,8 @@ internal class GalleryContext : DbContext, IGalleryContext
             entity.Property(e => e.Id).HasColumnType("INTEGER").IsRequired();
             entity.Property(e => e.ParentId).HasColumnType("INTEGER");
 
+            entity.HasKey(e => e.Id);
+
             entity
                 .HasOne<FileSystemItem>()
                 .WithMany()
@@ -47,8 +49,7 @@ internal class GalleryContext : DbContext, IGalleryContext
         {
             entity.ToTable(nameof(Images));
 
-            entity.Property(e => e.Id).HasColumnType("INTEGER").IsRequired();
-            entity.Property(e => e.FileSystemItemId).HasColumnType("INTEGER");
+            entity.HasKey(e => e.FileSystemItemId);
 
             entity
                 .HasOne(e => e.FileSystemItem)
