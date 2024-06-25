@@ -26,6 +26,7 @@ namespace Database
         {
             var item = DbContext
                 .FileSystemItems
+                .Include(x => x.Image)
                 .SingleOrDefault(x => x.Id == id);
 
             if (item == null)
