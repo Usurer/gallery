@@ -31,19 +31,6 @@ namespace Api.Controllers.Internal
             return item;
         }
 
-        [HttpPut]
-        public async Task<IResult> Put()
-        {
-            var item = new FileSystemItemDto
-            {
-                Path = "Some path",
-            };
-
-            await StorageService.UpsertAsync([item], Enumerable.Empty<FileSystemItemDto>());
-
-            return Results.Ok();
-        }
-
         [HttpDelete]
         public async Task<IResult> Purge()
         {

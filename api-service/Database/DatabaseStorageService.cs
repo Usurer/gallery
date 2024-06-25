@@ -1,6 +1,7 @@
 ﻿using Core;
 using Core.Abstractions;
 using Core.DTO;
+using Database.Entities;
 using Database.Entities.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -52,28 +53,27 @@ namespace Database
             return items.Select(x => x.ToDto()).ToArray();
         }
 
-        public IEnumerable<FileSystemItemDto> GetFileItems(long? folderId, int skip, int take, string[]? extensions)
+        public IEnumerable<FileItemDto> GetFileItems(long? folderId, int skip, int take, string[]? extensions)
         {
-            IQueryable<FileSystemItem> items;
+            IQueryable<Image> items;
 
             items = DbContext
-                .FileSystemItems;
+                .Images;
 
             if (folderId.HasValue)
             {
-                items = items.Where(x => x.ParentId == folderId);
+                items = items.Where(x => x.FileSystemItem.ParentId == folderId);
             }
 
             // TODO: Should we check whether the folder itself exist?
             items = items
-                .Where(x => !x.IsFolder)
-                .Include(x => x.Image)
-                .OrderBy(x => x.ParentId)
-                .ThenBy(x => x.CreationDate)
+                .Include(x => x.FileSystemItem)
+                .OrderBy(x => x.FileSystemItemId)
+                .ThenBy(x => x.FileSystemItem.CreationDate)
                 .Skip(skip)
                 .Take(take);
 
-            var result = new List<FileSystemItemDto>();
+            var result = new List<FileItemDto>();
 
             //TODO: can it be rewritten as lambda?
             foreach (var item in items)
@@ -86,18 +86,18 @@ namespace Database
                     }
                 }
 
-                if (item.Name.EndsWith(".MP4", StringComparison.InvariantCultureIgnoreCase))
+                if (item.FileSystemItem.Name.EndsWith(".MP4", StringComparison.InvariantCultureIgnoreCase))
                 {
                     continue;
                 }
 
-                result.Add(item.ToDto());
+                result.Add(item.FileSystemItem.ToFileDto(item));
             }
 
             return result;
         }
 
-        public IEnumerable<FileSystemItemDto> GetFolderItems(long? folderId, int skip, int take)
+        public IEnumerable<FolderItemDto> GetFolderItems(long? folderId, int skip, int take)
         {
             IQueryable<FileSystemItem> items;
 
@@ -119,10 +119,10 @@ namespace Database
                 .Skip(skip)
                 .Take(take);
 
-            return items.Select(x => x.ToDto()).ToArray();
+            return items.Select(x => x.ToFolderDto()).ToArray();
         }
 
-        public IEnumerable<FileSystemItemDto>? GetFolderAncestors(long folderId)
+        public IEnumerable<FolderItemDto>? GetFolderAncestors(long folderId)
         {
             var ansectors = new List<FileSystemItem>();
             var currentFolder = DbContext
@@ -148,7 +148,7 @@ namespace Database
                     .SingleOrDefault(x => x.Id == parent.ParentId && x.IsFolder);
             }
 
-            return ansectors.Select(x => x.ToDto()).ToArray();
+            return ansectors.Select(x => x.ToFolderDto()).ToArray();
         }
 
         public CollectionMetadataDto GetCollectionMetadata(long? rootId)
@@ -198,8 +198,9 @@ namespace Database
         public FileItemData? GetImage(long id)
         {
             var fileItem = DbContext
-                .FileSystemItems
-                .SingleOrDefault(x => x.Id == id && x.IsFolder == false);
+                .Images
+                .Include(x => x.FileSystemItem)
+                .SingleOrDefault(x => x.FileSystemItemId == id);
 
             if (fileItem == null)
             {
@@ -212,10 +213,10 @@ namespace Database
              * Maybe I should just copy FileStream to a MemoryStream and release the file handler.
              * TODO: Fix this
              */
-            var stream = new FileStream(fileItem.Path, FileMode.Open);
+            var stream = new FileStream(fileItem.FileSystemItem.Path, FileMode.Open);
             var info = new FileItemData
             {
-                Info = fileItem.ToDto(),
+                Info = fileItem.FileSystemItem.ToFileDto(fileItem),
                 Data = stream
             };
 
@@ -232,16 +233,16 @@ namespace Database
             return item?.ToDto();
         }
 
-        public async Task<FileSystemItemDto> GetOrCreateFileSystemItemAsync(DirectoryInfo directoryInfo)
+        public async Task<FolderItemDto> GetOrCreateFolderItemAsync(FolderItemDto dto)
         {
-            var rootDbRecord = DbContext.FileSystemItems.Where(x => x.Path == directoryInfo.FullName).FirstOrDefault();
-            if (rootDbRecord == null)
+            var entity = DbContext.FileSystemItems.Where(x => x.Path == dto.Path).FirstOrDefault();
+            if (entity == null)
             {
-                rootDbRecord = directoryInfo.ToFileSystemItem(null, null, null);
-                DbContext.FileSystemItems.Add(rootDbRecord);
+                entity = dto.ToEntity();
+                DbContext.FileSystemItems.Add(entity);
                 await DbContext.SaveChangesAsync();
             }
-            return rootDbRecord.ToDto();
+            return entity.ToFolderDto();
         }
 
         public async Task UpsertAsync(IEnumerable<FileSystemItemDto> add, IEnumerable<FileSystemItemDto> update)

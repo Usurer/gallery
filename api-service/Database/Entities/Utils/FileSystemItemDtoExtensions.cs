@@ -17,13 +17,13 @@ namespace Database.Entities.Utils
                 UpdatedAtDate = item.UpdatedAtDate,
             };
 
-            if (!item.IsFolder)
+            if (item is FileItemDto fileDto)
             {
                 var image = new Image
                 {
-                    Width = item.Width ?? 0, // TODO: Refactor these
-                    Height = item.Height ?? 0,
-                    Extension = item.Extension ?? string.Empty,
+                    Width = fileDto.Width,
+                    Height = fileDto.Height,
+                    Extension = fileDto.Extension,
                     FileSystemItem = fileSystemItem
                 };
 

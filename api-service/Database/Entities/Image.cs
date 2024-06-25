@@ -2,6 +2,7 @@
 {
     public class Image
     {
+        // TODO: Make it Required
         public long FileSystemItemId
         {
             get; set;

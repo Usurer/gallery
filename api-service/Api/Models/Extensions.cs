@@ -7,37 +7,37 @@ namespace Api.Models
     {
         public static FolderItemInfoModel ToFolderModel(this FileSystemItemDto dto)
         {
-            if (!dto.IsFolder)
+            if (dto is FolderItemDto folder)
             {
-                throw new InvalidOperationException($"Cannot transform file id={dto.Id} to folder item");
+                return new FolderItemInfoModel
+                {
+                    Id = folder.Id,
+                    Name = folder.Name,
+                    CreationDate = DateTimeUtils.FromUnixTimestamp(folder.CreationDate),
+                    UpdatedAtDate = folder.UpdatedAtDate,
+                };
             }
 
-            return new FolderItemInfoModel
-            {
-                Id = dto.Id,
-                Name = dto.Name,
-                CreationDate = DateTimeUtils.FromUnixTimestamp(dto.CreationDate),
-                UpdatedAtDate = dto.UpdatedAtDate,
-            };
+            throw new InvalidOperationException($"Cannot transform file id={dto.Id} to folder item");
         }
 
         public static FileItemInfoModel ToFileModel(this FileSystemItemDto dto)
         {
-            if (dto.IsFolder)
+            if (dto is FileItemDto file)
             {
-                throw new InvalidOperationException($"Cannot transform folder id={dto.Id} to file item");
+                return new FileItemInfoModel
+                {
+                    Id = file.Id,
+                    Name = file.Name,
+                    CreationDate = DateTimeUtils.FromUnixTimestamp(file.CreationDate),
+                    UpdatedAtDate = file.UpdatedAtDate,
+                    Width = file.Width,
+                    Height = file.Height,
+                    Extension = file.Extension,
+                };
             }
 
-            return new FileItemInfoModel
-            {
-                Id = dto.Id,
-                Name = dto.Name,
-                CreationDate = DateTimeUtils.FromUnixTimestamp(dto.CreationDate),
-                UpdatedAtDate = dto.UpdatedAtDate,
-                Width = dto.Width.GetValueOrDefault(),
-                Height = dto.Height.GetValueOrDefault(),
-                Extension = dto.Extension ?? string.Empty,
-            };
+            throw new InvalidOperationException($"Cannot transform folder id={dto.Id} to file item");
         }
 
         public static ItemInfoModel ToItemModel(this FileSystemItemDto dto)

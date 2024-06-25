@@ -8,11 +8,11 @@ namespace Core.Abstractions
 
         public IEnumerable<FileSystemItemDto> GetItems(int skip, int take);
 
-        public IEnumerable<FileSystemItemDto> GetFileItems(long? folderId, int skip, int take, string[]? extensions);
+        public IEnumerable<FileItemDto> GetFileItems(long? folderId, int skip, int take, string[]? extensions);
 
-        public IEnumerable<FileSystemItemDto> GetFolderItems(long? folderId, int skip, int take);
+        public IEnumerable<FolderItemDto> GetFolderItems(long? folderId, int skip, int take);
 
-        public IEnumerable<FileSystemItemDto>? GetFolderAncestors(long folderId);
+        public IEnumerable<FolderItemDto>? GetFolderAncestors(long folderId);
 
         public CollectionMetadataDto GetCollectionMetadata(long? rootId);
     }
