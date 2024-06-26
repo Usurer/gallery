@@ -102,7 +102,7 @@ namespace Database
         {
             IQueryable<FileSystemItem> items;
 
-            items = DbContext.FileSystemItems;
+            items = DbContext.FileSystemItems.Where(x => x.IsFolder);
 
             if (!folderId.HasValue)
             {
@@ -115,7 +115,6 @@ namespace Database
 
             // TODO: Should we query for the folder first and return error if there's no folder with given Id?
             items = items
-                .Where(x => x.IsFolder)
                 .OrderBy(x => x.CreationDate)
                 .Skip(skip)
                 .Take(take);
