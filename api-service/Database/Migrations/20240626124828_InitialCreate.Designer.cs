@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(GalleryContext))]
-    [Migration("20240621105321_ImagesTable")]
-    partial class ImagesTable
+    [Migration("20240626124828_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -22,27 +22,20 @@ namespace Database.Migrations
 
             modelBuilder.Entity("Database.Entities.Image", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<long>("FileSystemItemId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Extension")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<long?>("FileSystemItemId")
-                        .IsRequired()
+                    b.Property<int>("Height")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("Height")
+                    b.Property<int>("Width")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("Width")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FileSystemItemId")
-                        .IsUnique();
+                    b.HasKey("FileSystemItemId");
 
                     b.ToTable("Images", (string)null);
                 });
@@ -77,12 +70,6 @@ namespace Database.Migrations
                     b.Property<long>("CreationDate")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Extension")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("Height")
-                        .HasColumnType("INTEGER");
-
                     b.Property<bool>("IsFolder")
                         .HasColumnType("INTEGER");
 
@@ -100,10 +87,9 @@ namespace Database.Migrations
                     b.Property<long>("UpdatedAtDate")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("Width")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
 
                     b.ToTable("FileSystemItems", (string)null);
                 });
@@ -111,12 +97,27 @@ namespace Database.Migrations
             modelBuilder.Entity("Database.Entities.Image", b =>
                 {
                     b.HasOne("Database.FileSystemItem", "FileSystemItem")
-                        .WithOne()
+                        .WithOne("Image")
                         .HasForeignKey("Database.Entities.Image", "FileSystemItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("FileSystemItem");
+                });
+
+            modelBuilder.Entity("Database.FileSystemItem", b =>
+                {
+                    b.HasOne("Database.FileSystemItem", "Parent")
+                        .WithMany()
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Parent");
+                });
+
+            modelBuilder.Entity("Database.FileSystemItem", b =>
+                {
+                    b.Navigation("Image");
                 });
 #pragma warning restore 612, 618
         }

@@ -21,14 +21,17 @@ namespace Database.Migrations
                     Path = table.Column<string>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     CreationDate = table.Column<long>(type: "INTEGER", nullable: false),
-                    Extension = table.Column<string>(type: "TEXT", nullable: true),
-                    Width = table.Column<int>(type: "INTEGER", nullable: true),
-                    Height = table.Column<int>(type: "INTEGER", nullable: true),
                     UpdatedAtDate = table.Column<long>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_FileSystemItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FileSystemItems_FileSystemItems_ParentId",
+                        column: x => x.ParentId,
+                        principalTable: "FileSystemItems",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -45,16 +48,44 @@ namespace Database.Migrations
                 {
                     table.PrimaryKey("PK_ScanTargets", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "Images",
+                columns: table => new
+                {
+                    FileSystemItemId = table.Column<long>(type: "INTEGER", nullable: false),
+                    Extension = table.Column<string>(type: "TEXT", nullable: false),
+                    Width = table.Column<int>(type: "INTEGER", nullable: false),
+                    Height = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Images", x => x.FileSystemItemId);
+                    table.ForeignKey(
+                        name: "FK_Images_FileSystemItems_FileSystemItemId",
+                        column: x => x.FileSystemItemId,
+                        principalTable: "FileSystemItems",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FileSystemItems_ParentId",
+                table: "FileSystemItems",
+                column: "ParentId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "FileSystemItems");
+                name: "Images");
 
             migrationBuilder.DropTable(
                 name: "ScanTargets");
+
+            migrationBuilder.DropTable(
+                name: "FileSystemItems");
         }
     }
 }

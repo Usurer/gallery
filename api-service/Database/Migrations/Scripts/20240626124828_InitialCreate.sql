@@ -12,10 +12,8 @@ CREATE TABLE "FileSystemItems" (
     "Path" TEXT NOT NULL,
     "Name" TEXT NOT NULL,
     "CreationDate" INTEGER NOT NULL,
-    "Extension" TEXT NULL,
-    "Width" INTEGER NULL,
-    "Height" INTEGER NULL,
-    "UpdatedAtDate" INTEGER NOT NULL
+    "UpdatedAtDate" INTEGER NOT NULL,
+    CONSTRAINT "FK_FileSystemItems_FileSystemItems_ParentId" FOREIGN KEY ("ParentId") REFERENCES "FileSystemItems" ("Id") ON DELETE RESTRICT
 );
 
 CREATE TABLE "ScanTargets" (
@@ -25,8 +23,18 @@ CREATE TABLE "ScanTargets" (
     "IsInvalid" INTEGER NOT NULL
 );
 
+CREATE TABLE "Images" (
+    "FileSystemItemId" INTEGER NOT NULL CONSTRAINT "PK_Images" PRIMARY KEY,
+    "Extension" TEXT NOT NULL,
+    "Width" INTEGER NOT NULL,
+    "Height" INTEGER NOT NULL,
+    CONSTRAINT "FK_Images_FileSystemItems_FileSystemItemId" FOREIGN KEY ("FileSystemItemId") REFERENCES "FileSystemItems" ("Id") ON DELETE RESTRICT
+);
+
+CREATE INDEX "IX_FileSystemItems_ParentId" ON "FileSystemItems" ("ParentId");
+
 INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
-VALUES ('20240621083418_InitialCreate', '7.0.10');
+VALUES ('20240626124828_InitialCreate', '7.0.10');
 
 COMMIT;
 
