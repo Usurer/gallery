@@ -1,9 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Database.Entities;
 
 namespace Database;
 
-// Just alternative to [Key] attribute
-[PrimaryKey(nameof(Id))]
 public class FileSystemItem
 {
     public long Id
@@ -11,7 +9,6 @@ public class FileSystemItem
         get; set;
     }
 
-    // TODO: Should be a secondary keyy, ref to Id
     public long? ParentId
     {
         get; set;
@@ -37,24 +34,17 @@ public class FileSystemItem
         get; set;
     }
 
-    public string? Extension
-    {
-        get; set;
-    }
-
-    // TODO: With these fields nullable for Directory, out model becomes too de-normalized
-    // Maybe we need separate table for image metadata
-    public int? Width
-    {
-        get; set;
-    }
-
-    public int? Height
-    {
-        get; set;
-    }
-
     public long UpdatedAtDate
+    {
+        get; set;
+    }
+
+    public FileSystemItem? Parent
+    {
+        get; set;
+    }
+
+    public Image? Image
     {
         get; set;
     }

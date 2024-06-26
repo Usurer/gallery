@@ -1,6 +1,7 @@
 ﻿using Api;
 using Core.Utils;
 using Database;
+using Database.Entities;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Tests.Integration
@@ -47,16 +48,22 @@ namespace Tests.Integration
         {
             var fileName = @$"file_{namePostfix}.jpg";
             var path = CreatePath($@"folder_{parentId}\{fileName}");
-            return new FileSystemItem
+            var fileSystemItem = new FileSystemItem
             {
                 CreationDate = DateTimeUtils.ToUnixTimestamp(DateTime.Now),
                 Name = fileName,
                 Path = path,
+                ParentId = parentId
+            };
+            var image = new Image
+            {
+                FileSystemItem = fileSystemItem,
                 Extension = ".jpg",
                 Height = 600,
                 Width = 800,
-                ParentId = parentId
             };
+            fileSystemItem.Image = image;
+            return fileSystemItem;
         }
 
         private static FileSystemItem GenerateFolder(long? parentId, string namePostfix)

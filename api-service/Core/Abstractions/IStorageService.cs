@@ -4,7 +4,7 @@ namespace Core.Abstractions
 {
     public interface IStorageService
     {
-        public Task<FileSystemItemDto> GetOrCreateFileSystemItemAsync(DirectoryInfo directoryInfo);
+        public Task<FolderItemDto> GetOrCreateFolderItemAsync(FolderItemDto dto);
 
         public Task<FileSystemItemDto?> GetByPathAsync(string path);
 

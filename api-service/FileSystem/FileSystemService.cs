@@ -73,10 +73,8 @@ namespace FileSystem
 
                 var rootDirectoryInfo = new DirectoryInfo(fullPath);
 
-                // Use path from the filesystem instead of user-provided value
-                result.Path = rootDirectoryInfo.FullName;
-
-                var rootDbRecord = await StorageService.GetOrCreateFileSystemItemAsync(rootDirectoryInfo);
+                var dto = rootDirectoryInfo.ToFolderItemDto(null);
+                var rootDbRecord = await StorageService.GetOrCreateFolderItemAsync(dto);
 
                 var fileSystemInfos = rootDirectoryInfo.EnumerateFileSystemInfos();
 
@@ -100,26 +98,30 @@ namespace FileSystem
                         {
                             // TODO: Extract all image processing into a namespace under a Core namespace
                             ImageInfo? imageInfo = null;
+
                             if (!isDirectory)
                             {
                                 using var imageData = File.OpenRead(fileSystemInfo.FullName);
                                 try
                                 {
                                     imageInfo = await ImageJob.GetImageInfo(new StreamSource(imageData, false));
+                                    var newItem = fileSystemInfo.ToFileItemDto(
+                                        rootDbRecord.Id,
+                                        (int)imageInfo.ImageWidth,
+                                        (int)imageInfo.ImageHeight
+                                    );
+                                    newItems.Add(newItem);
                                 }
                                 catch (Exception ex)
                                 {
                                     Logger.LogError(ex, "Error while getting Image Info for {FileName}", fileSystemInfo.FullName);
                                 }
                             }
-
-                            var newItem = fileSystemInfo.ToFileSystemItemDto(
-                                rootDbRecord.Id,
-                                imageInfo != null ? (int)imageInfo.ImageWidth : null,
-                                imageInfo != null ? (int)imageInfo.ImageHeight : null
-                            );
-
-                            newItems.Add(newItem);
+                            else
+                            {
+                                var newItem = fileSystemInfo.ToFolderItemDto(rootDbRecord.Id);
+                                newItems.Add(newItem);
+                            }
 
                             // Yeah, these are not saved yet, but okay
                             result.Saved++;
@@ -157,20 +159,20 @@ namespace FileSystem
         public FileItemData? GetImage(long id)
         {
             var item = StorageQueryService.GetItem(id);
-            if (item == null || item.IsFolder)
+            if (item is FileItemDto fileItem && fileItem is not null)
             {
-                Logger.LogWarning("Image with id {ImageId} was not found in the database", id);
-                return null;
+                var stream = new FileStream(fileItem.Path, FileMode.Open);
+                var info = new FileItemData
+                {
+                    Info = fileItem,
+                    Data = stream
+                };
+
+                return info;
             }
 
-            var stream = new FileStream(item.Path, FileMode.Open);
-            var info = new FileItemData
-            {
-                Info = item,
-                Data = stream
-            };
-
-            return info;
+            Logger.LogWarning("Image with id {ImageId} was not found in the database", id);
+            return null;
         }
     }
 }

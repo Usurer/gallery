@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Data.Common;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 
 namespace Tests.Integration
 {
@@ -36,6 +37,8 @@ namespace Tests.Integration
                 });
 
                 var sp = services.BuildServiceProvider();
+                var dbContext = sp.GetRequiredService<GalleryContext>();
+                dbContext.Database.EnsureCreated();
             });
         }
     }

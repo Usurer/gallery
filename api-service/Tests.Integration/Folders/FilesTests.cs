@@ -40,9 +40,33 @@ namespace Tests.Integration.Folders
             // Assert
             response.EnsureSuccessStatusCode();
 
-            var data = await response.Content.ReadFromJsonAsync<IEnumerable<FolderItemInfoModel>>();
+            var data = await response.Content.ReadFromJsonAsync<IEnumerable<FileItemInfoModel>>();
             Assert.NotNull(data);
             Assert.Equal(10, data.Count());
+        }
+
+        [Theory]
+        [InlineData("/folders/1/files")]
+        public async Task WhenFilesReturned_ResultHasAllMetadata(string url)
+        {
+            // Arrange
+            SeedDb();
+
+            // Act
+            var response = await Client.GetAsync(url);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+
+            var data = await response.Content.ReadFromJsonAsync<IEnumerable<FileItemInfoModel>>();
+
+            var haveAllMetadata = data.All(
+                x => x.Width == 800
+                && x.Height == 600
+                && string.Equals(x.Extension, ".jpg", StringComparison.InvariantCultureIgnoreCase)
+            );
+
+            Assert.True(haveAllMetadata);
         }
 
         [Theory]
@@ -58,7 +82,7 @@ namespace Tests.Integration.Folders
             // Assert
             response.EnsureSuccessStatusCode();
 
-            var data = await response.Content.ReadFromJsonAsync<IEnumerable<FolderItemInfoModel>>();
+            var data = await response.Content.ReadFromJsonAsync<IEnumerable<FileItemInfoModel>>();
             Assert.NotNull(data);
             Assert.Equal(50, data.Count());
         }

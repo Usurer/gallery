@@ -51,7 +51,10 @@ namespace Api
 
             WebApplication app = builder.Build();
 
-            app.Services.UseSqliteDb();
+            if (!app.Environment.IsEnvironment("tests"))
+            {
+                app.Services.CheckDbState();
+            }
 
             app.UseCors();
 

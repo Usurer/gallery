@@ -1,7 +1,6 @@
 ﻿namespace Core.DTO;
 
-// TODO: Can we use ItemInfo/FileItemInfo/FolderItemInfo instead?
-public record FileSystemItemDto
+public abstract record FileSystemItemDto
 {
     public long Id
     {
@@ -13,9 +12,9 @@ public record FileSystemItemDto
         get; set;
     }
 
-    public bool IsFolder
+    public abstract bool IsFolder
     {
-        get; set;
+        get;
     }
 
     public string Path
@@ -29,21 +28,6 @@ public record FileSystemItemDto
     }
 
     public long CreationDate
-    {
-        get; set;
-    }
-
-    public string? Extension
-    {
-        get; set;
-    }
-
-    public int? Width
-    {
-        get; set;
-    }
-
-    public int? Height
     {
         get; set;
     }

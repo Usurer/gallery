@@ -7,7 +7,7 @@ namespace Core
         private bool disposedValue;
 
         // TODO: Rename, to Item, maybe?
-        public FileSystemItemDto Info
+        public FileItemDto Info
         {
             get;
             set;
